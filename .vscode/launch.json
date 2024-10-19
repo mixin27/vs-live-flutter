@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Launch VS Live",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--target", "lib/main.dart"],
+      "toolArgs": ["--dart-define-from-file", ".env"]
+    }
+  ]
+}
