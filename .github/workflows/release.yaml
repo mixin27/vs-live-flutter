@@ -1,0 +1,99 @@
+name: flutter CI Android Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 🏗 flutter build
+    runs-on: ubuntu-latest
+    env:
+      JAVA_VERSION: "17"
+      FLUTTER_VERSION: "3.19.0"
+
+    steps:
+      - uses: action/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: ${{env.JAVA_VERSION}}
+
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          echo "Listing all tags:"
+          git tag # List all tags
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v1.0.0")
+          echo "Latest tag is: $latest_tag"
+          echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
+      - name: Increment version
+        id: increment_version
+        run: |
+          latest_tag=${{ env.latest_tag }}
+          if [[ "$latest_tag" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            major=${BASH_REMATCH[1]}
+            minor=${BASH_REMATCH[2]}
+            patch=${BASH_REMATCH[3]}
+            patch=$((patch + 1))
+            new_tag="v$major.$minor.$patch"
+          else
+            new_tag="v1.2.0"
+          fi
+          echo "new_tag=$new_tag" >> $GITHUB_ENV
+
+      - name: Create and push new tag
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git tag ${{ env.new_tag }}
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/vs-live-flutter.git
+          git push origin ${{ env.new_tag }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{env.FLUTTER_VERSION}}
+          channel: "stable"
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      # Get Flutter dependencies
+      - run: flutter pub get
+
+      #   - name: Set up prod-specific endpoints
+      #     run: cp lib/main.dart lib/main.dart
+
+      - name: Build prod APK
+        run: flutter build apk --release -t lib/main.dart
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vs-live-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.new_tag }}
+          release_name: Release ${{ env.new_tag }}
+          draft: false
+          prerelease: false
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/app/outputs/flutter-apk/app-release.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive

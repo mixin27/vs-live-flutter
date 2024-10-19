@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  check:
     name: 🏗 flutter build
     runs-on: ubuntu-latest
     env:
