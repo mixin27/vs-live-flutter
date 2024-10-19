@@ -83,7 +83,6 @@ jobs:
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'vs-live-upload-keystore.jks'
-          fileDir: './main/folder/subfolder/'
           encodedString: ${{ secrets.KEYSTORE_BASE64 }}
 
       - name: Create key.properties
