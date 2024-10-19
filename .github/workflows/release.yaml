@@ -1,11 +1,11 @@
 name: flutter CI Android Release
 
 on:
-  push:
-    branches:
-      - "main"
-    paths-ignore:
-      - "**/README.md"
+  # push:
+  #   branches:
+  #     - "main"
+  #   paths-ignore:
+  #     - "**/README.md"
   workflow_dispatch:
 
 jobs:
@@ -78,6 +78,21 @@ jobs:
       #   - name: Set up prod-specific endpoints
       #     run: cp lib/main.dart lib/main.dart
 
+      - name: Download Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'vs-live-upload-keystore.jks'
+          fileDir: './main/folder/subfolder/'
+          encodedString: ${{ secrets.KEYSTORE_BASE64 }}
+
+      - name: Create key.properties
+        run: |
+          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
+          echo "storePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.RELEASE_KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.RELEASE_KEYSTORE_ALIAS }}" >> android/key.properties
+
       - name: Build prod APK
         run: flutter build apk --release -t lib/main.dart
 
@@ -104,5 +119,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/app/outputs/flutter-apk/app-release.apk
-          asset_name: app-release.apk
+          asset_name: vs-live-${{ env.new_tag }}-release.apk
           asset_content_type: application/vnd.android.package-archive
