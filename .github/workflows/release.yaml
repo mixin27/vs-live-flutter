@@ -1,6 +1,9 @@
 name: flutter CI Android Release
 
 on:
+  push:
+    tags:
+      - "*"
   workflow_dispatch:
 
 jobs:
