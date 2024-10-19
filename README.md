@@ -1,4 +1,4 @@
-# vs_live
+# VS Football Live Application
 
 A new Flutter project.
 
