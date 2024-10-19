@@ -13,7 +13,7 @@ on:
 
 jobs:
   check:
-    name: 🏗 flutter build
+    name: 🏗 Code analysing and checking
     runs-on: ubuntu-latest
     env:
       JAVA_VERSION: "17"
