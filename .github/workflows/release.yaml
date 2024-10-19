@@ -2,8 +2,10 @@ name: flutter CI Android Release
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - "main"
+    paths-ignore:
+      - "**/README.md"
   workflow_dispatch:
 
 jobs:
@@ -68,6 +70,10 @@ jobs:
 
       # Get Flutter dependencies
       - run: flutter pub get
+
+      # Run code generation
+      - name: 🔨 Run code generation
+        run: dart run build_runner build
 
       #   - name: Set up prod-specific endpoints
       #     run: cp lib/main.dart lib/main.dart
