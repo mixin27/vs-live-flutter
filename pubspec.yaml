@@ -22,6 +22,14 @@ dependencies:
   json_annotation: ^4.9.0
   shared_preferences: ^2.3.2
 
+  # video player
+  video_player: ^2.9.2
+  flick_video_player: ^0.9.0
+  # chewie: ^1.8.5
+  # media_kit: ^1.1.11
+  # media_kit_video: ^1.2.5
+  # media_kit_libs_video: ^1.0.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
