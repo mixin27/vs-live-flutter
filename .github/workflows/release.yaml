@@ -76,7 +76,7 @@ jobs:
       - name: Create .env
         run: |
             echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
-            echo "BASE_URL=${{ secrets.API_KEY }}" > .env
+            echo "API_KEY=${{ secrets.API_KEY }}" > .env
 
       # Run code generation
       - name: 🔨 Run code generation
