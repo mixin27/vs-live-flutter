@@ -73,6 +73,11 @@ jobs:
       # Get Flutter dependencies
       - run: flutter pub get
 
+      - name: Create .env
+        run: |
+            echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+            echo "BASE_URL=${{ secrets.API_KEY }}" > .env
+
       # Run code generation
       - name: 🔨 Run code generation
         run: dart run build_runner build
@@ -95,7 +100,7 @@ jobs:
           echo "keyAlias=${{ secrets.RELEASE_KEYSTORE_ALIAS }}" >> android/key.properties
 
       - name: Build prod APK
-        run: flutter build apk --release -t lib/main.dart
+        run: flutter build apk --release -t lib/main.dart --dart-define-from-file=.env
 
       - uses: actions/upload-artifact@v4
         with:

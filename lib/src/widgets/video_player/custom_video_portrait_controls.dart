@@ -61,10 +61,25 @@ class CustomVideoPortraitControls extends StatelessWidget {
                     isLive ? MainAxisAlignment.start : MainAxisAlignment.end,
                 children: <Widget>[
                   if (isLive) ...[
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("LIVE"),
+                        IconButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          icon: Icon(Icons.adaptive.arrow_back),
+                          iconSize: iconSize,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.circle,
+                              size: iconSize / 2,
+                              color: Colors.red,
+                            ),
+                            const SizedBox(width: 4),
+                            const Text("LIVE"),
+                          ],
+                        ),
                       ],
                     ),
                     const Spacer(),

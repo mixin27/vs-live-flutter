@@ -3,22 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/features/home/presentation/home_screen.dart';
+import 'package:vs_live/src/features/live_match/domain/live_match.dart';
+import 'package:vs_live/src/features/live_match/presentation/live_match_detail/live_match_detail_screen.dart';
+import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_screen.dart';
 import 'package:vs_live/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:vs_live/src/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:vs_live/src/routing/not_found_screen.dart';
 
 import 'app_startup.dart';
+import 'scaffold_with_nested_navigation.dart';
 
 part 'app_router.g.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _liveMatchNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'live-matches');
 
 enum AppRoute {
   onboarding,
-  signIn,
   home,
-  profile,
+  liveMatch,
+  liveMatchDetail,
 }
 
 @riverpod
@@ -28,7 +34,7 @@ GoRouter goRouter(GoRouterRef ref) {
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/',
+    initialLocation: '/live-matches',
     debugLogDiagnostics: !kReleaseMode,
     redirect: (context, state) {
       // If the app is still initializing, show the /startup route
@@ -46,10 +52,14 @@ GoRouter goRouter(GoRouterRef ref) {
         if (path != '/onboarding') {
           return '/onboarding';
         }
+
+        if (path.startsWith('/startup') || path.startsWith('/onboarding')) {
+          return '/live-matches';
+        }
         return null;
       }
 
-      return "/";
+      return null;
     },
     routes: [
       GoRoute(
@@ -75,6 +85,37 @@ GoRouter goRouter(GoRouterRef ref) {
         pageBuilder: (context, state) => const NoTransitionPage(
           child: HomeScreen(),
         ),
+      ),
+      StatefulShellRoute.indexedStack(
+        pageBuilder: (context, state, navigationShell) => NoTransitionPage(
+          child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _liveMatchNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/live-matches',
+                name: AppRoute.liveMatch.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: LiveMatchScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: '/details',
+                    name: AppRoute.liveMatchDetail.name,
+                    pageBuilder: (context, state) {
+                      LiveMatch match = state.extra as LiveMatch;
+                      return NoTransitionPage(
+                        child: LiveMatchDetailScreen(match: match),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     ],
     errorPageBuilder: (context, state) => const NoTransitionPage(
