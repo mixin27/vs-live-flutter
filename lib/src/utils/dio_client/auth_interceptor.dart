@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:vs_live/src/config/env.dart';
 
 class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    const apiKey =
-        bool.hasEnvironment("API_KEY") ? String.fromEnvironment("API_KEY") : "";
+    final apiKey = Env.apiKey;
 
     if (apiKey.isNotEmpty) {
       if (!options.headers.containsKey(HttpHeaders.authorizationHeader)) {

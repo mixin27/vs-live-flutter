@@ -24,8 +24,10 @@ dependencies:
 
   # video player
   video_player: ^2.9.2
-  flick_video_player: ^0.9.0
-  # chewie: ^1.8.5
+  # flick_video_player: ^0.9.0
+  # webview_flutter: ^4.10.0
+  chewie: ^1.8.5
+  envied: ^0.5.4+1
   # media_kit: ^1.1.11
   # media_kit_video: ^1.2.5
   # media_kit_libs_video: ^1.0.5
@@ -39,6 +41,7 @@ dev_dependencies:
   custom_lint: ^0.6.8
   json_serializable: ^6.8.0
   riverpod_lint: ^2.3.13
+  envied_generator: ^0.5.4+1
 
 flutter:
   uses-material-design: true

@@ -75,8 +75,8 @@ jobs:
 
       - name: Create .env
         run: |
-            echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
-            echo "API_KEY=${{ secrets.API_KEY }}" > .env
+            echo "BASE_URL=${{ secrets.BASE_URL }}" > ./.env
+            echo "API_KEY=${{ secrets.API_KEY }}" > ./.env
 
       # Run code generation
       - name: 🔨 Run code generation
@@ -99,8 +99,10 @@ jobs:
           echo "keyPassword=${{ secrets.RELEASE_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.RELEASE_KEYSTORE_ALIAS }}" >> android/key.properties
 
+      # Build apk
+      # --dart-define BASE_URL=${{ secrets.BASE_URL }} --dart-define API_KEY=${{ secrets.API_KEY }} 
       - name: Build prod APK
-        run: flutter build apk --release --dart-define BASE_URL=${{ secrets.BASE_URL }} --dart-define API_KEY=${{ secrets.API_KEY }} -t lib/main.dart
+        run: flutter build apk --release -t lib/main.dart
 
       - uses: actions/upload-artifact@v4
         with:

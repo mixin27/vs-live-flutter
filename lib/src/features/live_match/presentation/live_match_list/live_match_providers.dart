@@ -16,4 +16,9 @@ class GetAllLiveMatch extends _$GetAllLiveMatch {
   Future<List<LiveMatch>> build() {
     return _fetch();
   }
+
+  void refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(_fetch);
+  }
 }

@@ -35,7 +35,7 @@ class LiveMatchListWidget extends ConsumerWidget {
   }
 }
 
-class LiveMatchList extends StatelessWidget {
+class LiveMatchList extends ConsumerWidget {
   const LiveMatchList({
     super.key,
     required this.matches,
@@ -44,15 +44,20 @@ class LiveMatchList extends StatelessWidget {
   final List<LiveMatch> matches;
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: matches.length,
-      itemBuilder: (context, index) => LiveMatchItem(match: matches[index]),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.read(getAllLiveMatchProvider.notifier).refresh();
+      },
+      child: ListView.builder(
+        itemCount: matches.length,
+        itemBuilder: (context, index) => LiveMatchItem(match: matches[index]),
+      ),
     );
   }
 }
 
-class LiveMatchItem extends StatelessWidget {
+class LiveMatchItem extends ConsumerWidget {
   const LiveMatchItem({
     super.key,
     required this.match,
@@ -61,11 +66,13 @@ class LiveMatchItem extends StatelessWidget {
   final LiveMatch match;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final title = "${match.homeTeam.name} - ${match.awayTeam.name}";
     return ListTile(
       onTap: () {
-        // context.goNamed(AppRoute.liveMatchDetail.name, extra: match);
+        // ref
+        //     .read(videoLinkStateProvider.notifier)
+        //     .setLink(match.links.first.url);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -79,8 +86,8 @@ class LiveMatchItem extends StatelessWidget {
           ? Text(
               "LIVE".hardcoded,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                  fontSize: Sizes.p20,
+                  color: Theme.of(context).colorScheme.error.withOpacity(0.7),
+                  fontSize: Sizes.p16,
                   fontWeight: FontWeight.bold),
             )
           : Text(match.startedTime),

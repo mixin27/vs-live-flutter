@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:vs_live/src/features/home/presentation/home_screen.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_detail/live_match_detail_screen.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_screen.dart';
@@ -79,13 +78,13 @@ GoRouter goRouter(GoRouterRef ref) {
           child: OnboardingScreen(),
         ),
       ),
-      GoRoute(
-        path: '/',
-        name: AppRoute.home.name,
-        pageBuilder: (context, state) => const NoTransitionPage(
-          child: HomeScreen(),
-        ),
-      ),
+      // GoRoute(
+      //   path: '/',
+      //   name: AppRoute.home.name,
+      //   pageBuilder: (context, state) => const NoTransitionPage(
+      //     child: HomeScreen(),
+      //   ),
+      // ),
       StatefulShellRoute.indexedStack(
         pageBuilder: (context, state, navigationShell) => NoTransitionPage(
           child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
