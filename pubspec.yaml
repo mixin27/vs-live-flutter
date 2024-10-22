@@ -21,16 +21,17 @@ dependencies:
   go_router: ^14.3.0
   json_annotation: ^4.9.0
   shared_preferences: ^2.3.2
+  envied: ^0.5.4+1
 
   # video player
   video_player: ^2.9.2
-  # flick_video_player: ^0.9.0
-  # webview_flutter: ^4.10.0
   chewie: ^1.8.5
-  envied: ^0.5.4+1
-  # media_kit: ^1.1.11
-  # media_kit_video: ^1.2.5
-  # media_kit_libs_video: ^1.0.5
+
+  webview_flutter: ^4.10.0
+  webview_flutter_wkwebview: ^3.16.0
+  youtube_player_iframe: ^2.3.0
+
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
@@ -47,8 +48,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/player.html
 
   # fonts:
   #   - family: Schyler

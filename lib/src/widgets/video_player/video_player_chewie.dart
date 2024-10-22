@@ -2,25 +2,24 @@ import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:video_player/video_player.dart';
-import 'package:vs_live/src/providers/video_link_provider.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 
-class MyChewieVideoPlayer extends ConsumerStatefulWidget {
-  const MyChewieVideoPlayer({
+class VideoPlayerChewie extends StatefulWidget {
+  const VideoPlayerChewie({
     super.key,
+    required this.videoUrl,
     this.isLive = false,
   });
 
+  final String videoUrl;
   final bool isLive;
 
   @override
-  ConsumerState<MyChewieVideoPlayer> createState() =>
-      _MyChewieVideoPlayerState();
+  State<VideoPlayerChewie> createState() => _MyChewieVideoPlayerState();
 }
 
-class _MyChewieVideoPlayerState extends ConsumerState<MyChewieVideoPlayer> {
+class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
   int? bufferDelay;
@@ -34,9 +33,8 @@ class _MyChewieVideoPlayerState extends ConsumerState<MyChewieVideoPlayer> {
   }
 
   Future<void> initializePlayer() async {
-    final videoUrl = ref.watch(videoLinkStateProvider);
     _videoPlayerController = VideoPlayerController.networkUrl(
-        Uri.parse(videoUrl))
+        Uri.parse(widget.videoUrl))
       ..addListener(() {
         if (_videoPlayerController.value.hasError) {
           log(_videoPlayerController.value.errorDescription ?? "Unknown error");
@@ -75,21 +73,12 @@ class _MyChewieVideoPlayerState extends ConsumerState<MyChewieVideoPlayer> {
       isLive: widget.isLive,
       hideControlsTimer: const Duration(seconds: 1),
       placeholder: const Center(child: CircularProgressIndicator.adaptive()),
+      allowedScreenSleep: false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(
-      videoLinkStateProvider,
-      (prev, state) async {
-        if (prev != state) {
-          await _chewieController?.pause();
-          await initializePlayer();
-        }
-      },
-    );
-
     if (errorMessage.isNotEmpty) {
       return SafeArea(
         child: Column(
