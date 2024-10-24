@@ -32,6 +32,7 @@ dependencies:
   youtube_player_iframe: ^5.2.0
 
   cached_network_image: ^3.4.1
+  flutter_markdown: ^0.7.4+1
 
 dev_dependencies:
   flutter_test:

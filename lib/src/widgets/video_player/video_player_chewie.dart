@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:vs_live/src/utils/extensions/flutter_extensions.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 
 class VideoPlayerChewie extends StatefulWidget {
@@ -34,17 +33,16 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
   }
 
   Future<void> initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.networkUrl(
-        Uri.parse(widget.videoUrl))
-      ..addListener(() {
-        if (_videoPlayerController.value.hasError) {
-          log(_videoPlayerController.value.errorDescription ?? "Unknown error");
-          setState(() {
-            errorMessage = _videoPlayerController.value.errorDescription ??
-                "Unknown error occurred";
+    _videoPlayerController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+          ..addListener(() {
+            if (_videoPlayerController.value.hasError) {
+              setState(() {
+                errorMessage = _videoPlayerController.value.errorDescription ??
+                    "Unknown error occurred";
+              });
+            }
           });
-        }
-      });
 
     await Future.wait([
       _videoPlayerController.initialize(),
@@ -61,6 +59,16 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
       showOptions: !widget.isLive,
       controlsSafeAreaMinimum: const EdgeInsets.all(2),
       fullScreenByDefault: true,
+      progressIndicatorDelay:
+          bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
+      isLive: widget.isLive,
+      hideControlsTimer: const Duration(seconds: 1),
+      placeholder: const Center(child: CircularProgressIndicator.adaptive()),
+      allowedScreenSleep: false,
+      customControls: const CupertinoControls(
+        backgroundColor: Color.fromRGBO(41, 41, 41, 0.7),
+        iconColor: Color.fromARGB(255, 200, 200, 200),
+      ),
       errorBuilder: (context, errorMessage) => Center(
         child: Text(
           errorMessage,
@@ -70,12 +78,6 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
               ?.copyWith(color: Theme.of(context).colorScheme.error),
         ),
       ),
-      progressIndicatorDelay:
-          bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
-      isLive: widget.isLive,
-      hideControlsTimer: const Duration(seconds: 1),
-      placeholder: const Center(child: CircularProgressIndicator.adaptive()),
-      allowedScreenSleep: false,
     );
   }
 
@@ -83,28 +85,34 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
   Widget build(BuildContext context) {
     if (errorMessage.isNotEmpty) {
       return SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                errorMessage,
-                textAlign: TextAlign.center,
+        child: SizedBox(
+          width: context.screenWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "An error occurred.",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: Colors.redAccent),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () async {
-                setState(() {
-                  errorMessage = "";
-                });
-                initializePlayer();
-              },
-              child: Text("Retry".hardcoded),
-            ),
-          ],
+              TextButton(
+                onPressed: () async {
+                  setState(() {
+                    errorMessage = "";
+                  });
+                  initializePlayer();
+                },
+                child: Text("Retry".hardcoded),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -115,15 +123,22 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
           ? Chewie(
               controller: _chewieController!,
             )
-          : const Column(
+          : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CupertinoActivityIndicator(radius: 25),
-                SizedBox(height: 20),
+                const CupertinoActivityIndicator(
+                  radius: 25,
+                  color: Colors.white54,
+                ),
+                const SizedBox(height: 20),
                 Text(
                   'Loading...',
                   textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: Colors.white54),
                 ),
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/providers/app_theme_provider.dart';
@@ -12,12 +13,6 @@ class ThemeModeSwitchTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(appThemeModeProvider);
-
-    final icon = switch (themeMode) {
-      ThemeMode.light => Icons.light_mode_outlined,
-      ThemeMode.dark => Icons.dark_mode_outlined,
-      _ => Icons.brightness_4_outlined,
-    };
 
     void changeTheme(ThemeMode mode) {
       ref.read(appThemeModeProvider.notifier).setThemeMode(mode);
@@ -61,7 +56,7 @@ class ThemeModeSwitchTile extends HookConsumerWidget {
 
     return ListTile(
       onTap: handleTap,
-      leading: Icon(icon),
+      leading: const Icon(CupertinoIcons.moon_circle),
       title: const Text('Theme'),
       subtitle: const Text('Change theme mode.'),
     );

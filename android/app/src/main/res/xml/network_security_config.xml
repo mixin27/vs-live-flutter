@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">bulkyiptv.com</domain>
+        <domain includeSubdomains="true">channels.ooguy.com</domain>
+        <domain includeSubdomains="true">abc.myplay.live</domain>
+        <domain includeSubdomains="true">v11.thetvapp.to</domain>
+    </domain-config>
+</network-security-config>

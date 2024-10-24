@@ -34,3 +34,39 @@ class LiveMatches extends _$LiveMatches {
     state = items;
   }
 }
+
+@riverpod
+class SearchLiveMatches extends _$SearchLiveMatches {
+  @override
+  List<LiveMatch> build() {
+    return [];
+  }
+
+  void onSearch(String query, List<LiveMatch> data) {
+    state = [];
+    if (query.isNotEmpty) {
+      final result = data
+          .where((element) {
+            final str = '${element.homeTeam.name}${element.awayTeam.name}';
+            return str.toLowerCase().contains(query.toLowerCase());
+          })
+          .toSet()
+          .toList();
+      state.addAll(result);
+    }
+  }
+
+  void clear() {
+    state = [];
+  }
+}
+
+@riverpod
+class SearchKeyword extends _$SearchKeyword {
+  @override
+  String build() {
+    return '';
+  }
+
+  void update(String keyword) => state = keyword;
+}

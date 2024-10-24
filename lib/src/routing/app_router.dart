@@ -9,6 +9,7 @@ import 'package:vs_live/src/features/live_match/presentation/live_match_player/l
 import 'package:vs_live/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:vs_live/src/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:vs_live/src/features/settings/presentation/app_settings/settings_screen.dart';
+import 'package:vs_live/src/features/settings/presentation/privacy_policy/privacy_policy_screen.dart';
 import 'package:vs_live/src/routing/not_found_screen.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
@@ -25,6 +26,7 @@ enum AppRoute {
   liveMatchDetail,
   player,
   settings,
+  privacyPolicy,
 }
 
 @riverpod
@@ -119,6 +121,15 @@ GoRouter goRouter(GoRouterRef ref) {
         pageBuilder: (context, state) => const NoTransitionPage(
           child: SettingsScreen(),
         ),
+        routes: [
+          GoRoute(
+            path: 'privacy-policy',
+            name: AppRoute.privacyPolicy.name,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: PrivacyPolicyPage(),
+            ),
+          ),
+        ],
       ),
     ],
     errorPageBuilder: (context, state) => const NoTransitionPage(

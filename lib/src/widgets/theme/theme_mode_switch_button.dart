@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/providers/app_theme_provider.dart';
@@ -12,14 +13,8 @@ class ThemeModeSwitchButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appThemeModeProvider);
 
-    final icon = switch (state) {
-      ThemeMode.dark => const Icon(Icons.dark_mode_outlined),
-      ThemeMode.light => const Icon(Icons.light_mode_outlined),
-      _ => null,
-    };
-
     return PopupMenuButton(
-      icon: icon,
+      icon: const Icon(CupertinoIcons.moon_circle),
       itemBuilder: (context) {
         return [
           if (state != ThemeMode.system)
@@ -31,7 +26,7 @@ class ThemeModeSwitchButton extends ConsumerWidget {
               },
               child: ListTile(
                 leading: const Icon(
-                  Icons.settings_system_daydream_outlined,
+                  CupertinoIcons.settings,
                 ),
                 title: Text("System".hardcoded),
               ),
@@ -45,7 +40,7 @@ class ThemeModeSwitchButton extends ConsumerWidget {
               },
               child: ListTile(
                 leading: const Icon(
-                  Icons.dark_mode_outlined,
+                  CupertinoIcons.moon,
                 ),
                 title: Text("Dark".hardcoded),
               ),
@@ -59,7 +54,7 @@ class ThemeModeSwitchButton extends ConsumerWidget {
               },
               child: ListTile(
                 leading: const Icon(
-                  Icons.light_mode_outlined,
+                  CupertinoIcons.sun_max,
                 ),
                 title: Text("Light".hardcoded),
               ),

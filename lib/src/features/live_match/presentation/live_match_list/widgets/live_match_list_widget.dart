@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,19 +52,26 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
     );
 
     final state = ref.watch(getAllLiveMatchProvider);
+    final searchState = ref.watch(searchLiveMatchesProvider);
 
     return switch (state) {
       AsyncData(:final value) when value.isNotEmpty =>
         widget.viewType == ViewType.grid
-            ? LiveMatchGridView(matches: _liveMatches)
-            : LiveMatchListView(matches: _liveMatches),
+            ? LiveMatchGridView(
+                matches: searchState.isNotEmpty ? searchState : _liveMatches)
+            : LiveMatchListView(
+                matches: searchState.isNotEmpty ? searchState : _liveMatches),
       AsyncLoading() => _liveMatches.isEmpty
           ? SliverList.list(
               children: const [CupertinoActivityIndicator()],
             )
           : widget.viewType == ViewType.grid
-              ? LiveMatchGridView(matches: _liveMatches)
-              : LiveMatchListView(matches: _liveMatches),
+              ? LiveMatchGridView(
+                  matches: searchState.isNotEmpty ? searchState : _liveMatches,
+                )
+              : LiveMatchListView(
+                  matches: searchState.isNotEmpty ? searchState : _liveMatches,
+                ),
       AsyncError(:final error, stackTrace: var _) => SliverList.list(children: [
           Text(error.toString()),
         ]),
@@ -90,10 +95,9 @@ class LiveMatchGridView extends ConsumerWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
-      itemCount: matches.length * 2,
+      itemCount: matches.length,
       itemBuilder: (context, index) {
-        final test = [...matches, ...matches];
-        final match = test[index];
+        final match = matches[index];
 
         return Padding(
           padding: EdgeInsets.only(
@@ -150,8 +154,8 @@ class GridLiveMatchItem extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Theme.of(context).colorScheme.primary.withOpacity(0.3),
-            Theme.of(context).colorScheme.primary.withOpacity(0.08),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.08),
           ],
           stops: const [0.1, 1],
         ),
@@ -159,8 +163,8 @@ class GridLiveMatchItem extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Theme.of(context).colorScheme.primary.withOpacity(0.5),
-            Theme.of(context).colorScheme.primary.withOpacity(0.5),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.5),
           ],
         ),
         child: GridTile(
@@ -194,7 +198,7 @@ class GridLiveMatchItem extends ConsumerWidget {
             ),
             subtitle: Center(
               child: Text(
-                Format.dayOfWeek(DateTime.parse(match.startedDate)),
+                Format.matchDate(DateTime.parse(match.startedDate)),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
@@ -269,10 +273,12 @@ class TeamInfoWidget extends StatelessWidget {
     super.key,
     required this.team,
     this.size = 35,
+    this.isShort = true,
   });
 
   final FootballTeam team;
   final double size;
+  final bool isShort;
 
   @override
   Widget build(BuildContext context) {
@@ -289,7 +295,7 @@ class TeamInfoWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: imageProvider,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -297,9 +303,10 @@ class TeamInfoWidget extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const Icon(Icons.broken_image_outlined),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
-            team.name.substring(0, 3),
+            isShort ? team.name.substring(0, 3) : team.name,
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ],
@@ -323,12 +330,6 @@ class LiveMatchItem extends ConsumerWidget {
       child: InkWell(
         onTap: () {
           context.pushNamed(AppRoute.liveMatchDetail.name, extra: match);
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => LiveMatchDetailScreen(match: match),
-          //   ),
-          // );
         },
         borderRadius: BorderRadius.circular(20),
         child: GlassmorphicContainer(
@@ -339,8 +340,8 @@ class LiveMatchItem extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.3),
-              Theme.of(context).colorScheme.primary.withOpacity(0.08),
+              Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+              Theme.of(context).colorScheme.secondary.withOpacity(0.03),
             ],
             stops: const [0.1, 1],
           ),
@@ -348,8 +349,8 @@ class LiveMatchItem extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.5),
-              Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
             ],
           ),
           child: Column(
@@ -378,12 +379,18 @@ class LiveMatchItem extends ConsumerWidget {
                           ),
                     ),
                   ),
-                  const SizedBox(height: Sizes.p12),
+                  const SizedBox(height: Sizes.p16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       // Image
-                      Expanded(child: TeamInfoWidget(team: match.homeTeam)),
+                      Expanded(
+                        child: TeamInfoWidget(
+                          team: match.homeTeam,
+                          size: 50,
+                          isShort: false,
+                        ),
+                      ),
                       const SizedBox(width: Sizes.p12),
                       Expanded(
                         child: Column(
@@ -423,7 +430,13 @@ class LiveMatchItem extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: Sizes.p12),
-                      Expanded(child: TeamInfoWidget(team: match.awayTeam)),
+                      Expanded(
+                        child: TeamInfoWidget(
+                          team: match.awayTeam,
+                          size: 50,
+                          isShort: false,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -455,60 +468,48 @@ class LiveMatchItem extends ConsumerWidget {
   }
 }
 
-class GlassContainer extends StatefulWidget {
-  const GlassContainer(
-      {super.key, this.child, this.onTap, this.width, this.height});
+// class GlassContainer extends StatefulWidget {
+//   const GlassContainer(
+//       {super.key, this.child, this.onTap, this.width, this.height});
 
-  final Widget? child;
-  final VoidCallback? onTap;
-  final double? width;
-  final double? height;
+//   final Widget? child;
+//   final VoidCallback? onTap;
+//   final double? width;
+//   final double? height;
 
-  @override
-  State<GlassContainer> createState() => _GlassContainerState();
-}
+//   @override
+//   State<GlassContainer> createState() => _GlassContainerState();
+// }
 
-class _GlassContainerState extends State<GlassContainer> {
-  bool isPressed = false;
+// class _GlassContainerState extends State<GlassContainer> {
+//   bool isPressed = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapUp: (_) {
-        setState(() => isPressed = true);
-      },
-      onTapDown: (_) {
-        setState(() => isPressed = false);
-      },
-      child: Material(
-        elevation: 0,
-        shadowColor: Colors.black26,
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        clipBehavior: Clip.antiAlias,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            height: widget.width,
-            width: widget.height,
-            // decoration: BoxDecoration(
-            //   boxShadow: [
-            //     BoxShadow(
-            //       color: Colors.black.withOpacity(0.3),
-            //       blurRadius: 25,
-            //       spreadRadius: -5,
-            //     )
-            //   ],
-            //   color: Colors.transparent,
-            //   borderRadius: BorderRadius.circular(25),
-            //   // border: Border.all(width: 2, color: Colors.white30),
-            // ),
-            child: widget.child,
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: widget.onTap,
+//       onTapUp: (_) {
+//         setState(() => isPressed = true);
+//       },
+//       onTapDown: (_) {
+//         setState(() => isPressed = false);
+//       },
+//       child: Material(
+//         elevation: 0,
+//         shadowColor: Colors.black26,
+//         color: Colors.transparent,
+//         borderRadius: BorderRadius.circular(20),
+//         clipBehavior: Clip.antiAlias,
+//         child: BackdropFilter(
+//           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+//           child: AnimatedContainer(
+//             duration: const Duration(milliseconds: 200),
+//             height: widget.width,
+//             width: widget.height,
+//             child: widget.child,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

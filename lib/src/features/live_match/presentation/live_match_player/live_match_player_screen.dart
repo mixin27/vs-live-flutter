@@ -31,6 +31,7 @@ class _LiveMatchPlayerScreenState extends State<LiveMatchPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: AdaptiveVideoPlayer(
         videoUrl: widget.videoUrl,
         isLive: true,
