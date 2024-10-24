@@ -27,20 +27,20 @@ class _VideoPlayerYoutubeState extends State<VideoPlayerYoutube> {
   Future<void> init() async {
     final videoId = YoutubePlayerController.convertUrlToId(widget.videoUrl);
 
-    _controller = YoutubePlayerController(
-      initialVideoId: videoId ?? '',
+    _controller = YoutubePlayerController.fromVideoId(
+      videoId: videoId ?? '',
       params: const YoutubePlayerParams(
         mute: false,
         showControls: true,
         showFullscreenButton: true,
-        autoPlay: true,
       ),
+      autoPlay: true,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerIFrame(
+    return YoutubePlayer(
       controller: _controller,
       aspectRatio: widget.aspectRatio,
     );

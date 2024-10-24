@@ -10,7 +10,7 @@ class AdaptiveVideoPlayer extends ConsumerWidget {
     super.key,
     required this.videoUrl,
     this.isLive = false,
-    this.type = VideoType.nomral,
+    this.type = VideoType.normal,
   });
 
   final String videoUrl;
@@ -20,13 +20,15 @@ class AdaptiveVideoPlayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return switch (type) {
-      VideoType.iframe => VideoPlayerIframe(
-          videoUrl: videoUrl,
-          backgroundColor: Colors.black,
-          keepAlive: true,
-          aspectRatio: 16 / 9,
+      VideoType.iframe => Align(
+          alignment: Alignment.center,
+          child: VideoPlayerIframe(
+            videoUrl: videoUrl,
+            backgroundColor: Colors.black,
+            keepAlive: true,
+          ),
         ),
-        VideoType.youtube => VideoPlayerYoutube(videoUrl: videoUrl),
+      VideoType.youtube => VideoPlayerYoutube(videoUrl: videoUrl),
       _ => VideoPlayerChewie(
           videoUrl: videoUrl,
           isLive: isLive,
@@ -35,4 +37,14 @@ class AdaptiveVideoPlayer extends ConsumerWidget {
   }
 }
 
-enum VideoType { nomral, iframe, youtube }
+enum VideoType { normal, iframe, youtube }
+
+extension VideoTypeX on String {
+  VideoType getVideoType() {
+    return switch (this) {
+      "iframe" => VideoType.iframe,
+      "youtube" => VideoType.youtube,
+      _ => VideoType.normal,
+    };
+  }
+}

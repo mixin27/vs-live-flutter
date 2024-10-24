@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
@@ -59,6 +60,7 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
       autoPlay: true,
       showOptions: !widget.isLive,
       controlsSafeAreaMinimum: const EdgeInsets.all(2),
+      fullScreenByDefault: true,
       errorBuilder: (context, errorMessage) => Center(
         child: Text(
           errorMessage,
@@ -82,6 +84,7 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
     if (errorMessage.isNotEmpty) {
       return SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
@@ -114,10 +117,14 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
             )
           : const Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CircularProgressIndicator.adaptive(),
+                CupertinoActivityIndicator(radius: 25),
                 SizedBox(height: 20),
-                Text('Loading'),
+                Text(
+                  'Loading...',
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
     );

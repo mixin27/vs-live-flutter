@@ -17,8 +17,20 @@ class GetAllLiveMatch extends _$GetAllLiveMatch {
     return _fetch();
   }
 
-  void refresh() async {
+  Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(_fetch);
+  }
+}
+
+@Riverpod(keepAlive: true)
+class LiveMatches extends _$LiveMatches {
+  @override
+  List<LiveMatch> build() {
+    return [];
+  }
+
+  void setData(List<LiveMatch> items) {
+    state = items;
   }
 }

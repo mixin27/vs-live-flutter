@@ -1,7 +1,7 @@
 name: vs_live
 description: "VS football live application."
 publish_to: "none"
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.5.3
@@ -27,9 +27,9 @@ dependencies:
   video_player: ^2.9.2
   chewie: ^1.8.5
 
-  webview_flutter: ^4.10.0
+  webview_flutter: ^4.9.0
   webview_flutter_wkwebview: ^3.16.0
-  youtube_player_iframe: ^2.3.0
+  youtube_player_iframe: ^5.2.0
 
   cached_network_image: ^3.4.1
 

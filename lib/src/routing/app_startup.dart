@@ -13,7 +13,9 @@ Future<void> appStartup(AppStartupRef ref) async {
     ref.invalidate(onboardingRepositoryProvider);
   });
   // await for all initialization code to be complete before returning
-  await ref.watch(onboardingRepositoryProvider.future);
+  await Future.wait([
+    ref.watch(onboardingRepositoryProvider.future),
+  ]);
 }
 
 /// Widget class to manage asynchronous app initialization
