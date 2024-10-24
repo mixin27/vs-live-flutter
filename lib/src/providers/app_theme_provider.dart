@@ -1,41 +1,37 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vs_live/src/utils/prefs_manager.dart';
 
 part 'app_theme_provider.g.dart';
 
-const String themePrefsKey = "theme_mode";
+const PreferenceKey keyTheme = 'key_theme';
 
 @Riverpod(keepAlive: true)
 class AppThemeMode extends _$AppThemeMode {
-  Future<ThemeMode> _getThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
+  ThemeMode _getCachedThemeMode() {
+    final prefs = ref.read(preferenceManagerProvider);
 
-    final theme = prefs.getString(themePrefsKey);
-    if (theme == null) {
-      prefs.setString(themePrefsKey, ThemeMode.system.toString());
-      return ThemeMode.system;
-    }
+    final mode = prefs.getData<String>(keyTheme);
+    log(mode.toString());
 
-    return switch (theme) {
-      "ThemeMode.dark" => ThemeMode.dark,
-      "ThemeMode.light" => ThemeMode.light,
+    return switch (mode) {
+      'ThemeMode.dark' => ThemeMode.dark,
+      'ThemeMode.light' => ThemeMode.light,
       _ => ThemeMode.system,
     };
   }
 
   @override
   ThemeMode build() {
-    ThemeMode themeMode = ThemeMode.system;
-    _getThemeMode().then((value) {
-      themeMode = value;
-    });
-    return themeMode;
+    return _getCachedThemeMode();
   }
 
-  Future<void> changeTheme(ThemeMode mode) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(themePrefsKey, mode.toString());
-    state = mode;
+  void setThemeMode(ThemeMode mode) {
+    final prefs = ref.read(preferenceManagerProvider);
+    prefs.setData<String>(mode.toString(), keyTheme);
+
+    state = _getCachedThemeMode();
   }
 }

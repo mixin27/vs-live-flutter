@@ -1,11 +1,19 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vs_live/main.dart';
+
+part 'prefs_manager.g.dart';
 
 typedef PreferenceKey = String;
 
-class PreferenceManager {
-  final SharedPreferences _prefs;
+Future<SharedPreferences> getSharedPrefs() async {
+  return SharedPreferences.getInstance();
+}
 
-  PreferenceManager(this._prefs);
+class PreferenceManager {
+  const PreferenceManager(this._prefs);
+
+  final SharedPreferences _prefs;
 
   Future<bool> setData<T>(T data, PreferenceKey key) async {
     const invalidTypeError = 'Invalid Type';
@@ -44,4 +52,9 @@ class PreferenceManager {
     final data = getFuncs[T]?.call();
     return data;
   }
+}
+
+@riverpod
+PreferenceManager preferenceManager(PreferenceManagerRef ref) {
+  return PreferenceManager(sharedPreferences);
 }

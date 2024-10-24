@@ -8,6 +8,7 @@ import 'package:vs_live/src/features/live_match/presentation/live_match_list/liv
 import 'package:vs_live/src/features/live_match/presentation/live_match_player/live_match_player_screen.dart';
 import 'package:vs_live/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:vs_live/src/features/onboarding/presentation/onboarding_screen.dart';
+import 'package:vs_live/src/features/settings/presentation/app_settings/settings_screen.dart';
 import 'package:vs_live/src/routing/not_found_screen.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
@@ -23,6 +24,7 @@ enum AppRoute {
   home,
   liveMatchDetail,
   player,
+  settings,
 }
 
 @riverpod
@@ -110,6 +112,13 @@ GoRouter goRouter(GoRouterRef ref) {
             ),
           );
         },
+      ),
+      GoRoute(
+        path: '/settings',
+        name: AppRoute.settings.name,
+        pageBuilder: (context, state) => const NoTransitionPage(
+          child: SettingsScreen(),
+        ),
       ),
     ],
     errorPageBuilder: (context, state) => const NoTransitionPage(

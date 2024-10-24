@@ -22,45 +22,48 @@ class ThemeModeSwitchButton extends ConsumerWidget {
       icon: icon,
       itemBuilder: (context) {
         return [
-          PopupMenuItem(
-            onTap: () {
-              ref
-                  .read(appThemeModeProvider.notifier)
-                  .changeTheme(ThemeMode.system);
-            },
-            child: ListTile(
-              leading: const Icon(
-                Icons.settings_system_daydream_outlined,
+          if (state != ThemeMode.system)
+            PopupMenuItem(
+              onTap: () {
+                ref
+                    .read(appThemeModeProvider.notifier)
+                    .setThemeMode(ThemeMode.system);
+              },
+              child: ListTile(
+                leading: const Icon(
+                  Icons.settings_system_daydream_outlined,
+                ),
+                title: Text("System".hardcoded),
               ),
-              title: Text("System".hardcoded),
             ),
-          ),
-          PopupMenuItem(
-            onTap: () {
-              ref
-                  .read(appThemeModeProvider.notifier)
-                  .changeTheme(ThemeMode.dark);
-            },
-            child: ListTile(
-              leading: const Icon(
-                Icons.dark_mode_outlined,
+          if (state != ThemeMode.dark)
+            PopupMenuItem(
+              onTap: () {
+                ref
+                    .read(appThemeModeProvider.notifier)
+                    .setThemeMode(ThemeMode.dark);
+              },
+              child: ListTile(
+                leading: const Icon(
+                  Icons.dark_mode_outlined,
+                ),
+                title: Text("Dark".hardcoded),
               ),
-              title: Text("Dark".hardcoded),
             ),
-          ),
-          PopupMenuItem(
-            onTap: () {
-              ref
-                  .read(appThemeModeProvider.notifier)
-                  .changeTheme(ThemeMode.light);
-            },
-            child: ListTile(
-              leading: const Icon(
-                Icons.light_mode_outlined,
+          if (state != ThemeMode.light)
+            PopupMenuItem(
+              onTap: () {
+                ref
+                    .read(appThemeModeProvider.notifier)
+                    .setThemeMode(ThemeMode.light);
+              },
+              child: ListTile(
+                leading: const Icon(
+                  Icons.light_mode_outlined,
+                ),
+                title: Text("Light".hardcoded),
               ),
-              title: Text("Light".hardcoded),
             ),
-          ),
         ];
       },
     );

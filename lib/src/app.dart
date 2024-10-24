@@ -9,9 +9,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final goRouter = ref.watch(goRouterProvider);
     final themeMode = ref.watch(appThemeModeProvider);
-    debugPrint(themeMode.name);
+    final goRouter = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
       routerConfig: goRouter,

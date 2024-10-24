@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_providers.dart';
+import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
@@ -33,8 +35,14 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
             floating: true,
             snap: true,
             pinned: true,
-            actions: const [
-              ThemeModeSwitchButton(),
+            actions: [
+              const ThemeModeSwitchButton(),
+              IconButton(
+                onPressed: () {
+                  context.pushNamed(AppRoute.settings.name);
+                },
+                icon: const Icon(Icons.settings_outlined),
+              ),
             ],
             bottom: AppBar(
               title: Row(
