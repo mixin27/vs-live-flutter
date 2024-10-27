@@ -36,4 +36,19 @@ class Format {
     }
     return '';
   }
+
+  static DateTime parseMatchDateTime(String date, String time) {
+    DateFormat format = DateFormat("yyyy-MM-dd hh:mm a");
+    final formattedStr = format.parse('$date $time');
+    return formattedStr;
+  }
+
+  static String matchDateAndTime(DateTime date) {
+    return DateFormat().add_MEd().add_jm().format(date);
+  }
+
+  static String parseAndFormatMatchDateTime(String date, String time) {
+    final parsedDate = parseMatchDateTime(date, time);
+    return matchDateAndTime(parsedDate);
+  }
 }

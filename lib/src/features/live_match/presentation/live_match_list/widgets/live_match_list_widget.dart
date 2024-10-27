@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -6,13 +5,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_providers.dart';
+import 'package:vs_live/src/features/live_match/presentation/widgets/league_info_widget.dart';
+import 'package:vs_live/src/features/live_match/presentation/widgets/match_info_widget.dart';
 import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
-import 'package:vs_live/src/widgets/async_value_ui.dart';
 import 'package:vs_live/src/widgets/glassmorphism/glassmorphism.dart';
-import 'package:vs_live/src/widgets/text/animated_live_text.dart';
-import 'package:vs_live/src/widgets/text/animated_text.dart';
 
 enum ViewType {
   list,
@@ -40,7 +38,7 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
     ref.listen(
       getAllLiveMatchProvider,
       (prev, state) {
-        state.showAlertDialogOnError(context);
+        // state.showAlertDialogOnError(context);
 
         setState(() {
           _liveMatches = state.maybeWhen(
@@ -73,10 +71,67 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
                   matches: searchState.isNotEmpty ? searchState : _liveMatches,
                 ),
       AsyncError(:final error, stackTrace: var _) => SliverList.list(children: [
-          Text(error.toString()),
+          Padding(
+            padding: const EdgeInsets.all(Sizes.p16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.wifi_off_outlined,
+                  size: 45,
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                ),
+                const SizedBox(height: Sizes.p16),
+                Text(
+                  error.toString(),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: Sizes.p16),
+                TextButton(
+                  onPressed: () {
+                    ref.read(getAllLiveMatchProvider.notifier).refresh();
+                  },
+                  child: Text("Retry".hardcoded),
+                ),
+              ],
+            ),
+          ),
         ]),
       _ => SliverList.list(
-          children: [Text("No matches found".hardcoded)],
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(Sizes.p16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.sports_soccer_outlined,
+                    size: 45,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.8),
+                  ),
+                  const SizedBox(height: Sizes.p16),
+                  Text(
+                    "Currently, no matches available from the server. Please come back later."
+                        .hardcoded,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  const SizedBox(height: Sizes.p16),
+                  TextButton(
+                    onPressed: () {
+                      ref.read(getAllLiveMatchProvider.notifier).refresh();
+                    },
+                    child: Text("Refresh".hardcoded),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
     };
   }
@@ -168,25 +223,7 @@ class GridLiveMatchItem extends ConsumerWidget {
           ],
         ),
         child: GridTile(
-          header: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Text(
-              match.league.name,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
+          header: LeagueInfoWidget(league: match.league),
           footer: GridTileBar(
             title: Center(
               child: Text(
@@ -207,109 +244,9 @@ class GridLiveMatchItem extends ConsumerWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Image
-                Expanded(
-                  child: TeamInfoWidget(
-                    team: match.homeTeam,
-                    size: 50,
-                  ),
-                ),
-                const SizedBox(width: Sizes.p12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "VS".hardcoded,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                      if (match.liveStatus) ...[
-                        const SizedBox(height: 4),
-                        AnimatedTextKit(
-                          repeatForever: true,
-                          animatedTexts: [
-                            AnimatedLiveText(
-                              "LIVE",
-                              textStyle: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    color: Theme.of(context).colorScheme.error,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                const SizedBox(width: Sizes.p12),
-                Expanded(
-                  child: TeamInfoWidget(
-                    team: match.awayTeam,
-                    size: 50,
-                  ),
-                ),
-              ],
-            ),
+            child: MatchInfoWidget(match: match),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class TeamInfoWidget extends StatelessWidget {
-  const TeamInfoWidget({
-    super.key,
-    required this.team,
-    this.size = 35,
-    this.isShort = true,
-  });
-
-  final FootballTeam team;
-  final double size;
-  final bool isShort;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CachedNetworkImage(
-            imageUrl: team.logo,
-            imageBuilder: (context, imageProvider) => Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            placeholder: (context, url) => const CupertinoActivityIndicator(),
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.broken_image_outlined),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            isShort ? team.name.substring(0, 3) : team.name,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.labelMedium,
-          ),
-        ],
       ),
     );
   }
@@ -358,87 +295,9 @@ class LiveMatchItem extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: Text(
-                      match.league.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                            fontSize: 12,
-                          ),
-                    ),
-                  ),
+                  LeagueInfoWidget(league: match.league),
                   const SizedBox(height: Sizes.p16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Image
-                      Expanded(
-                        child: TeamInfoWidget(
-                          team: match.homeTeam,
-                          size: 50,
-                          isShort: false,
-                        ),
-                      ),
-                      const SizedBox(width: Sizes.p12),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "VS".hardcoded,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                            ),
-                            if (match.liveStatus) ...[
-                              const SizedBox(height: 4),
-                              AnimatedTextKit(
-                                repeatForever: true,
-                                animatedTexts: [
-                                  AnimatedLiveText(
-                                    "LIVE",
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(
-                                          color: Colors.red,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: Sizes.p12),
-                      Expanded(
-                        child: TeamInfoWidget(
-                          team: match.awayTeam,
-                          size: 50,
-                          isShort: false,
-                        ),
-                      ),
-                    ],
-                  ),
+                  MatchInfoWidget(match: match),
                 ],
               ),
               ListTile(
@@ -467,49 +326,3 @@ class LiveMatchItem extends ConsumerWidget {
     );
   }
 }
-
-// class GlassContainer extends StatefulWidget {
-//   const GlassContainer(
-//       {super.key, this.child, this.onTap, this.width, this.height});
-
-//   final Widget? child;
-//   final VoidCallback? onTap;
-//   final double? width;
-//   final double? height;
-
-//   @override
-//   State<GlassContainer> createState() => _GlassContainerState();
-// }
-
-// class _GlassContainerState extends State<GlassContainer> {
-//   bool isPressed = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: widget.onTap,
-//       onTapUp: (_) {
-//         setState(() => isPressed = true);
-//       },
-//       onTapDown: (_) {
-//         setState(() => isPressed = false);
-//       },
-//       child: Material(
-//         elevation: 0,
-//         shadowColor: Colors.black26,
-//         color: Colors.transparent,
-//         borderRadius: BorderRadius.circular(20),
-//         clipBehavior: Clip.antiAlias,
-//         child: BackdropFilter(
-//           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-//           child: AnimatedContainer(
-//             duration: const Duration(milliseconds: 200),
-//             height: widget.width,
-//             width: widget.height,
-//             child: widget.child,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

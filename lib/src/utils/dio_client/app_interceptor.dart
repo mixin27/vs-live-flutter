@@ -54,7 +54,7 @@ Response<dynamic> mapResponseData({
             message: customMessage,
             statusCode: response?.statusCode,
             statusMessage: response?.statusMessage,
-          ),
+          ).toJson((value) => null),
   );
 }
 

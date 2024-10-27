@@ -47,7 +47,7 @@ class LiveMatchRepository {
       } else {
         throw ServerException(
           code: result.statusCode.toString(),
-          message: result.statusMessage,
+          message: result.message,
         );
       }
     } catch (error) {

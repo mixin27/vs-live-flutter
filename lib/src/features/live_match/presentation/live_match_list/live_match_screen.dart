@@ -19,7 +19,7 @@ class LiveMatchScreen extends StatefulWidget {
 }
 
 class _LiveMatchScreenState extends State<LiveMatchScreen> {
-  int _selectedView = 1;
+  int _selectedView = 0;
 
   @override
   Widget build(BuildContext context) {
