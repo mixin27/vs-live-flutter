@@ -42,6 +42,13 @@ jobs:
       - name: 📦 Package install
         run: flutter pub get
 
+      - name: Create .env
+        run: |
+          touch .env
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          cat .env
+
       - name: 🔨 Run code generation
         run: dart run build_runner build
 
