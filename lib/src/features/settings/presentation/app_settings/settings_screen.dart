@@ -20,10 +20,10 @@ class SettingsScreen extends StatelessWidget {
           const PrivacyPolicyListTile(),
           AboutListTile(
             icon: const Icon(Icons.info_outline),
-            applicationName: "VS Football Live",
+            applicationName: "Billion Sport Live",
             applicationVersion: 'v1.0.1',
             applicationIcon: const Icon(Icons.sports_soccer_outlined),
-            applicationLegalese: 'Copyright (c) 2024 VS Football Live',
+            applicationLegalese: 'Copyright (c) 2024 Billion Sport Live',
             child: Text("License".hardcoded),
           ),
         ],

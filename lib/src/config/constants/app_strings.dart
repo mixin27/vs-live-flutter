@@ -2,7 +2,7 @@ class AppStrings {
   static const String privacyPolicyMarkdown = '''
 # Privacy Policy
 
-Last updated: August 11, 2024
+Last updated: November 06, 2024
 
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
@@ -22,9 +22,9 @@ For the purposes of this Privacy Policy:
     
 *   **Affiliate** means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.
     
-*   **Application** refers to VS Football Live, the software program provided by the Company.
+*   **Application** refers to Billion Sport Live, the software program provided by the Company.
     
-*   **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to VS Football Live.
+*   **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Billion Sport Live.
     
 *   **Country** refers to: Myanmar (Burma)
     
@@ -163,6 +163,6 @@ You are advised to review this Privacy Policy periodically for any changes. Chan
 
 If you have any questions about this Privacy Policy, You can contact us:
 
-*   By email: contact@vs-football-live.com
+*   By email: kyawzayartun.dev@gmail.com
 ''';
 }

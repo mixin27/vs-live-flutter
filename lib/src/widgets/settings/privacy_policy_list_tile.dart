@@ -20,7 +20,7 @@ class PrivacyPolicyListTile extends StatelessWidget {
       trailing: IconButton(
         onPressed: () async {
           final url = Uri.parse(
-            'https://www.termsfeed.com/live/f8d439ed-1831-4fc2-98a4-954a0694400f',
+            'https://www.termsfeed.com/live/a6770a8d-99a9-4c7a-b714-9d58189ffe20',
           );
           if (!await launchUrl(url)) {
             throw Exception('Could not launch $url');

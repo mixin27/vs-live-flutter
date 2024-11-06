@@ -1,4 +1,4 @@
-package com.billionare.vs_live
+package com.billion.sport_live
 
 import io.flutter.embedding.android.FlutterActivity
 

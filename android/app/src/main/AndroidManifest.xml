@@ -6,7 +6,7 @@
     <!-- android:networkSecurityConfig="@xml/network_security_config" -->
     
     <application
-        android:label="VS Football Live"
+        android:label="Billion Sport Live"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">

@@ -104,11 +104,15 @@ class LiveLink extends Equatable {
     required this.name,
     required this.url,
     required this.matchId,
+    this.type,
   });
 
   final int id;
   final String name;
   final String url;
+
+  @JsonKey(name: 'link_type')
+  final LiveLinkType? type;
 
   @JsonKey(name: "match_id")
   final int matchId;
@@ -118,6 +122,27 @@ class LiveLink extends Equatable {
 
   @override
   List<Object?> get props => [id, name, url, matchId];
+
+  @override
+  bool? get stringify => true;
+}
+
+@JsonSerializable(createToJson: false)
+@immutable
+class LiveLinkType extends Equatable {
+  const LiveLinkType({
+    required this.id,
+    required this.name,
+  });
+
+  final int id;
+  final String name;
+
+  factory LiveLinkType.fromJson(Map<String, dynamic> json) =>
+      _$LiveLinkTypeFromJson(json);
+
+  @override
+  List<Object?> get props => [id, name];
 
   @override
   bool? get stringify => true;

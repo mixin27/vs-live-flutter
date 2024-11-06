@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -141,18 +139,21 @@ class _LiveLinkItemState extends State<LiveLinkItem> {
   @override
   Widget build(BuildContext context) {
     final isSelected = _selected == widget.link.url;
+    final videoType =
+        widget.link.type != null && widget.link.type!.name == 'iframe'
+            ? VideoType.iframe.name
+            : VideoType.normal.name;
 
     return ListTile(
       onTap: () {
         setState(() {
           _selected = widget.link.url;
         });
-        log({"videoUrl": widget.link.url}.toString());
         context.pushNamed(
           AppRoute.player.name,
           queryParameters: {
             "videoUrl": widget.link.url,
-            "videoType": VideoType.normal.name,
+            "videoType": videoType,
           },
         );
       },
