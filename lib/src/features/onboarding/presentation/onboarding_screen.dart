@@ -22,13 +22,25 @@ class OnboardingScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            CircleAvatar(
+              radius: 50,
+              child: ClipRRect(
+                clipBehavior: Clip.hardEdge,
+                borderRadius: BorderRadius.circular(25),
+                child: Image.asset(
+                  "assets/images/logo.png",
+                  width: 100,
+                  height: 100,
+                ),
+              ),
+            ),
+            gapH16,
             Text(
-              'Welcome to VS Football Live.\nHappy watching!',
+              'Welcome to Billion Sport Live.\nEnjoy watching!',
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
             gapH16,
-            // todo(me): logo
             FilledButton(
               onPressed: state.isLoading
                   ? null
@@ -43,6 +55,7 @@ class OnboardingScreen extends ConsumerWidget {
                     },
               child: Text('Get Started'.hardcoded),
             ),
+            gapH16,
           ],
         ),
       ),
