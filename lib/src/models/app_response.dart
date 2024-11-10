@@ -27,12 +27,15 @@ class AppResponse<T> extends Equatable {
   final T? data;
 
   /// Current page number of pagination result.
+  @JsonKey(defaultValue: 0)
   final int page;
 
   /// Limit page size of pagination
+  @JsonKey(defaultValue: 0)
   final int pageSize;
 
   /// Total page of pagination result.
+  @JsonKey(defaultValue: 0)
   final int total;
 
   /// `statusCode` added by http response (Not from server)

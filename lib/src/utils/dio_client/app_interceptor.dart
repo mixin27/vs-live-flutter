@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -16,6 +17,7 @@ class AppInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
+    log(err.toString());
     final errorMessage = getErrorMessage(err, err.response?.statusCode);
 
     final responseData = mapResponseData(
@@ -44,6 +46,8 @@ Response<dynamic> mapResponseData({
       'statusMessage': response?.statusMessage,
     });
   }
+
+  log("hasResponseData: $hasResponseData");
 
   return Response(
     requestOptions: requestOptions,

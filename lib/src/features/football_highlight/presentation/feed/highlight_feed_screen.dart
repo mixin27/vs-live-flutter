@@ -1,24 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
-import 'package:vs_live/src/features/live_match/domain/live_match.dart';
-import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_providers.dart';
-import 'package:vs_live/src/routing/app_router.dart';
+import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
+import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
+import 'package:vs_live/src/features/football_highlight/presentation/feed/widgets/football_highlights_list.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
-import 'widgets/live_match_list_widget.dart';
-
-class LiveMatchScreen extends StatefulWidget {
-  const LiveMatchScreen({super.key});
+class HighlightFeedScreen extends StatefulWidget {
+  const HighlightFeedScreen({super.key});
 
   @override
-  State<LiveMatchScreen> createState() => _LiveMatchScreenState();
+  State<HighlightFeedScreen> createState() => _HighlightFeedScreenState();
 }
 
-class _LiveMatchScreenState extends State<LiveMatchScreen> {
+class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
   int _selectedView = 0;
 
   @override
@@ -32,30 +29,19 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
         ),
         slivers: [
           SliverAppBar(
-            title: Text("Live Matches".hardcoded),
+            title: Text("Highlights".hardcoded),
             floating: true,
             snap: true,
             pinned: true,
-            actions: [
-              const ThemeModeSwitchButton(),
-              IconButton(
-                onPressed: () {
-                  context.pushNamed(AppRoute.settings.name);
-                },
-                icon: const Icon(Icons.settings_outlined),
-              ),
-              IconButton(
-                onPressed: () {
-                  context.pushNamed(AppRoute.highlights.name);
-                },
-                icon: const Icon(Icons.sports_soccer_outlined),
-              ),
+            actions: const [
+              ThemeModeSwitchButton(),
             ],
             bottom: AppBar(
+              automaticallyImplyLeading: false,
               title: Row(
                 children: [
                   const Expanded(
-                    child: CustomSearchField(),
+                    child: HighlightsSearchField(),
                   ),
                   const SizedBox(width: 10),
                   Padding(
@@ -95,13 +81,15 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
             builder: (context, ref, child) {
               return CupertinoSliverRefreshControl(
                 onRefresh: () async {
-                  await ref.read(getAllLiveMatchProvider.notifier).refresh();
+                  await ref
+                      .read(getAllHighlightsFeedProvider.notifier)
+                      .refresh();
                 },
               );
             },
           ),
           SliverList.list(children: const [SizedBox(height: 20)]),
-          LiveMatchListWidget(
+          FootballHighlightsList(
             viewType: isGridView ? ViewType.grid : ViewType.list,
           ),
         ],
@@ -110,22 +98,23 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   }
 }
 
-class CustomSearchField extends ConsumerStatefulWidget {
-  const CustomSearchField({
+class HighlightsSearchField extends ConsumerStatefulWidget {
+  const HighlightsSearchField({
     super.key,
   });
 
   @override
-  ConsumerState<CustomSearchField> createState() => _CustomSearchFieldState();
+  ConsumerState<HighlightsSearchField> createState() =>
+      _CustomSearchFieldState();
 }
 
-class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
+class _CustomSearchFieldState extends ConsumerState<HighlightsSearchField> {
   final _searchController = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(getAllLiveMatchProvider);
-    final List<LiveMatch> data =
+    final state = ref.watch(getAllHighlightsFeedProvider);
+    final List<FootballHighlight> data =
         state.maybeWhen(orElse: () => [], data: (data) => data);
 
     return CupertinoSearchTextField(
@@ -133,11 +122,11 @@ class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
       placeholder: "Search".hardcoded,
       style: Theme.of(context).textTheme.labelLarge,
       onChanged: (value) {
-        ref.read(searchLiveMatchesProvider.notifier).onSearch(value, data);
+        ref.read(searchHighlightsProvider.notifier).onSearch(value, data);
       },
       onSuffixTap: () {
         _searchController.clear();
-        ref.read(searchLiveMatchesProvider.notifier).clear();
+        ref.read(searchHighlightsProvider.notifier).clear();
       },
     );
   }

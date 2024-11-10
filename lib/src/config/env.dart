@@ -12,4 +12,7 @@ abstract class Env {
 
   @EnviedField(varName: 'ONESIGNAL_APP_ID', obfuscate: true)
   static final String onesignalAppId = _Env.onesignalAppId;
+
+  @EnviedField(varName: 'HIGHLIGHT_API_KEY', obfuscate: true)
+  static final String highlightApiKey = _Env.highlightApiKey;
 }

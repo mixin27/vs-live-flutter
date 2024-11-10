@@ -48,6 +48,7 @@ jobs:
           echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
           echo "ONESIGNAL_APP_ID=${{ secrets.ONESIGNAL_APP_ID }}" >> .env
+          echo "HIGHLIGHT_API_KEY=${{ secrets.HIGHLIGHT_API_KEY }}" >> .env
           cat .env
 
       - name: 🔨 Run code generation
