@@ -17,6 +17,9 @@ class TeamInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasShortName = team.shortName != null;
+    final name = isShort && hasShortName ? team.shortName! : team.name;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
@@ -40,7 +43,7 @@ class TeamInfoWidget extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            isShort ? team.name.substring(0, 3) : team.name,
+            name,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelMedium,
           ),

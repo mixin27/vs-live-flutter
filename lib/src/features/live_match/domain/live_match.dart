@@ -57,17 +57,20 @@ class FootballTeam extends Equatable {
     required this.id,
     required this.name,
     required this.logo,
+    this.shortName,
   });
 
   final int id;
   final String name;
   final String logo;
+  @JsonKey(name: "short_name")
+  final String? shortName;
 
   factory FootballTeam.fromJson(Map<String, dynamic> json) =>
       _$FootballTeamFromJson(json);
 
   @override
-  List<Object?> get props => [id, name, logo];
+  List<Object?> get props => [id, name, logo, shortName];
 
   @override
   bool? get stringify => true;

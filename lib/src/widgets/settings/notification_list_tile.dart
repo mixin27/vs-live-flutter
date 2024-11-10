@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vs_live/src/utils/onesignal/onesignal.dart';
 
 class NotificationSwitchListTile extends StatefulWidget {
   const NotificationSwitchListTile({
@@ -16,10 +17,10 @@ class _NotificationSwitchListTileState
 
   @override
   void initState() {
-    // final flag = getPushSubsciption();
-    // setState(() {
-    //   _enabled = flag ?? false;
-    // });
+    final flag = getPushSubsciption();
+    setState(() {
+      _enabled = flag ?? false;
+    });
     super.initState();
   }
 
@@ -31,7 +32,7 @@ class _NotificationSwitchListTileState
         setState(() {
           _enabled = newValue;
         });
-        // await disablePush(!newValue);
+        await disablePush(!newValue);
       },
       secondary: const Icon(Icons.notifications_outlined),
       title: const Text('Notification'),

@@ -28,7 +28,7 @@ class OnboardingScreen extends ConsumerWidget {
                 clipBehavior: Clip.hardEdge,
                 borderRadius: BorderRadius.circular(25),
                 child: Image.asset(
-                  "assets/images/logo.png",
+                  "assets/images/sport_live_logo.png",
                   width: 100,
                   height: 100,
                 ),
