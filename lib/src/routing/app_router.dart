@@ -16,11 +16,17 @@ import 'package:vs_live/src/routing/not_found_screen.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
 import 'app_startup.dart';
+import 'scaffold_with_nested_navigation.dart';
 
 part 'app_router.g.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _liveMatchesNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'live-matches');
+final _highlightsNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'highlights');
+final _settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
 
 enum AppRoute {
   onboarding,
@@ -86,29 +92,9 @@ GoRouter goRouter(GoRouterRef ref) {
         ),
       ),
       GoRoute(
-        path: '/home',
-        name: AppRoute.home.name,
-        pageBuilder: (context, state) => const NoTransitionPage(
-          child: LiveMatchScreen(),
-        ),
-        routes: [
-          GoRoute(
-            path: 'detail',
-            name: AppRoute.liveMatchDetail.name,
-            pageBuilder: (context, state) {
-              LiveMatch match = state.extra as LiveMatch;
-              return NoTransitionPage(
-                child: LiveMatchDetailScreen(match: match),
-              );
-            },
-          ),
-        ],
-      ),
-      GoRoute(
         path: '/player',
         name: AppRoute.player.name,
         pageBuilder: (context, state) {
-          // final extra = state.extra as Map<String, dynamic>;
           final videoUrl = state.uri.queryParameters["videoUrl"];
           final videoType = state.uri.queryParameters["videoType"]!;
           return NoTransitionPage(
@@ -120,33 +106,9 @@ GoRouter goRouter(GoRouterRef ref) {
         },
       ),
       GoRoute(
-        path: '/settings',
-        name: AppRoute.settings.name,
-        pageBuilder: (context, state) => const NoTransitionPage(
-          child: SettingsScreen(),
-        ),
-        routes: [
-          GoRoute(
-            path: 'privacy-policy',
-            name: AppRoute.privacyPolicy.name,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: PrivacyPolicyPage(),
-            ),
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/highlights',
-        name: AppRoute.highlights.name,
-        pageBuilder: (context, state) => const NoTransitionPage(
-          child: HighlightFeedScreen(),
-        ),
-      ),
-      GoRoute(
         path: '/highlight-player',
         name: AppRoute.highlightPlayer.name,
         pageBuilder: (context, state) {
-          // final extra = state.extra as Map<String, dynamic>;
           final embedVideo = state.uri.queryParameters["embedVideo"];
           return NoTransitionPage(
             child: HighlightPlayerScreen(
@@ -154,6 +116,70 @@ GoRouter goRouter(GoRouterRef ref) {
             ),
           );
         },
+      ),
+      StatefulShellRoute.indexedStack(
+        pageBuilder: (context, state, navigationShell) => NoTransitionPage(
+          child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _liveMatchesNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/home',
+                name: AppRoute.home.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: LiveMatchScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'detail',
+                    name: AppRoute.liveMatchDetail.name,
+                    pageBuilder: (context, state) {
+                      LiveMatch match = state.extra as LiveMatch;
+                      return NoTransitionPage(
+                        child: LiveMatchDetailScreen(match: match),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _highlightsNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/highlights',
+                name: AppRoute.highlights.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: HighlightFeedScreen(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _settingsNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/settings',
+                name: AppRoute.settings.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: SettingsScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'privacy-policy',
+                    name: AppRoute.privacyPolicy.name,
+                    pageBuilder: (context, state) => const NoTransitionPage(
+                      child: PrivacyPolicyPage(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     ],
     errorPageBuilder: (context, state) => const NoTransitionPage(

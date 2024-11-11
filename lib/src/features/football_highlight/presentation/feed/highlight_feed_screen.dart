@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/widgets/football_highlights_list.dart';
+import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
@@ -33,8 +35,14 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
             floating: true,
             snap: true,
             pinned: true,
-            actions: const [
-              ThemeModeSwitchButton(),
+            actions: [
+              const ThemeModeSwitchButton(),
+              IconButton(
+                onPressed: () {
+                  context.goNamed(AppRoute.settings.name);
+                },
+                icon: const Icon(Icons.settings_outlined),
+              ),
             ],
             bottom: AppBar(
               automaticallyImplyLeading: false,

@@ -40,15 +40,9 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
               const ThemeModeSwitchButton(),
               IconButton(
                 onPressed: () {
-                  context.pushNamed(AppRoute.settings.name);
+                  context.goNamed(AppRoute.settings.name);
                 },
                 icon: const Icon(Icons.settings_outlined),
-              ),
-              IconButton(
-                onPressed: () {
-                  context.pushNamed(AppRoute.highlights.name);
-                },
-                icon: const Icon(Icons.sports_soccer_outlined),
               ),
             ],
             bottom: AppBar(

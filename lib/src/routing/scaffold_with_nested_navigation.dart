@@ -61,21 +61,20 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentIndex,
         destinations: [
-          // products
           NavigationDestination(
-            icon: const Icon(Icons.sports_football_outlined),
-            selectedIcon: const Icon(Icons.work),
+            icon: const Icon(Icons.live_tv),
+            selectedIcon: const Icon(Icons.live_tv_outlined),
             label: 'Live'.hardcoded,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.view_headline_outlined),
-            selectedIcon: const Icon(Icons.view_headline),
-            label: 'Two'.hardcoded,
+            icon: const Icon(Icons.video_collection),
+            selectedIcon: const Icon(Icons.video_collection_outlined),
+            label: 'Highlights'.hardcoded,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            label: 'Three'.hardcoded,
+            icon: const Icon(Icons.settings),
+            selectedIcon: const Icon(Icons.settings_outlined),
+            label: 'Settings'.hardcoded,
           ),
         ],
         onDestinationSelected: onDestinationSelected,
@@ -106,19 +105,19 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
             labelType: NavigationRailLabelType.all,
             destinations: <NavigationRailDestination>[
               NavigationRailDestination(
-                icon: const Icon(Icons.sports_football_outlined),
-                selectedIcon: const Icon(Icons.work),
+                icon: const Icon(Icons.live_tv),
+                selectedIcon: const Icon(Icons.live_tv_outlined),
                 label: Text('Live'.hardcoded),
               ),
               NavigationRailDestination(
-                icon: const Icon(Icons.view_headline_outlined),
-                selectedIcon: const Icon(Icons.view_headline),
-                label: Text('Two'.hardcoded),
+                icon: const Icon(Icons.video_collection),
+                selectedIcon: const Icon(Icons.video_collection_outlined),
+                label: Text('Highlights'.hardcoded),
               ),
               NavigationRailDestination(
-                icon: const Icon(Icons.person_outline),
-                selectedIcon: const Icon(Icons.person),
-                label: Text('Three'.hardcoded),
+                icon: const Icon(Icons.settings),
+                selectedIcon: const Icon(Icons.settings_outlined),
+                label: Text('Settings'.hardcoded),
               ),
             ],
           ),
