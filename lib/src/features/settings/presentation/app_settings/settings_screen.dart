@@ -22,7 +22,11 @@ class SettingsScreen extends StatelessWidget {
             icon: const Icon(Icons.info_outline),
             applicationName: "Billion Sport Live",
             applicationVersion: 'v1.0.1',
-            applicationIcon: const Icon(Icons.sports_soccer_outlined),
+            applicationIcon: Image.asset(
+              "assets/images/logo_gradient.png",
+              width: 30,
+              height: 30,
+            ),
             applicationLegalese: 'Copyright (c) 2024 Billion Sport Live',
             child: Text("License".hardcoded),
           ),

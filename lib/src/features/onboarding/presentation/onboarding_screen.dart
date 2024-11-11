@@ -22,15 +22,18 @@ class OnboardingScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            CircleAvatar(
-              radius: 50,
-              child: ClipRRect(
-                clipBehavior: Clip.hardEdge,
-                borderRadius: BorderRadius.circular(25),
-                child: Image.asset(
-                  "assets/images/sport_live_logo.png",
-                  width: 100,
-                  height: 100,
+            ClipRRect(
+              clipBehavior: Clip.hardEdge,
+              borderRadius: BorderRadius.circular(25),
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  shape: BoxShape.rectangle,
+                  image: const DecorationImage(
+                    image: AssetImage("assets/images/logo_gradient.png"),
+                  ),
                 ),
               ),
             ),
