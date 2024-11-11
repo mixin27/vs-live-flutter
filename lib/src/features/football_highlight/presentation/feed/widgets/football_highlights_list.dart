@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
+import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/glassmorphism/glassmorphism.dart';
@@ -173,7 +175,14 @@ class HighlightGridItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       borderRadius: BorderRadius.circular(20),
-      onTap: () {},
+      onTap: () {
+        context.pushNamed(
+          AppRoute.highlightPlayer.name,
+          queryParameters: {
+            "embedVideo": highlight.embed,
+          },
+        );
+      },
       child: GlassmorphicContainer(
         borderRadius: 20,
         border: 0,
@@ -199,15 +208,29 @@ class HighlightGridItem extends ConsumerWidget {
           header: GridTileBar(
             // backgroundColor: Theme.of(context).cardColor,
             title: Text(
-              '${highlight.title}(${highlight.competition.name})',
-              style: Theme.of(context).textTheme.labelLarge,
+              highlight.competition.name,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
           ),
           footer: GridTileBar(
             // backgroundColor: Theme.of(context).cardColor,
-            title: Text(
-              Format.format(DateTime.parse(highlight.date)),
-              style: Theme.of(context).textTheme.labelMedium,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                gapH8,
+                Text(
+                  highlight.title,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(
+                  Format.format(DateTime.parse(highlight.date)),
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary),
+                ),
+              ],
             ),
           ),
           child: CachedNetworkImage(
@@ -259,7 +282,14 @@ class HighlightListItem extends ConsumerWidget {
         vertical: Sizes.p8,
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(
+            AppRoute.highlightPlayer.name,
+            queryParameters: {
+              "embedVideo": highlight.embed,
+            },
+          );
+        },
         borderRadius: BorderRadius.circular(25),
         child: GlassmorphicContainer(
           borderRadius: 20,
@@ -296,10 +326,23 @@ class HighlightListItem extends ConsumerWidget {
                     ),
                   ),
                 ),
-                placeholder: (context, url) =>
-                    const CupertinoActivityIndicator(),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.broken_image_outlined),
+                placeholder: (context, url) => const SizedBox(
+                  height: 180,
+                  child: CupertinoActivityIndicator(radius: 30),
+                ),
+                errorWidget: (context, url, error) => SizedBox(
+                  height: 180,
+                  child: Center(
+                    child: Icon(
+                      Icons.broken_image_outlined,
+                      size: 180,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -310,8 +353,8 @@ class HighlightListItem extends ConsumerWidget {
                     Text(
                       highlight.competition.name,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary),
                     ),
                     gapH4,
                     Text(
@@ -321,7 +364,8 @@ class HighlightListItem extends ConsumerWidget {
                     gapH4,
                     Text(
                       Format.format(DateTime.parse(highlight.date)),
-                      style: Theme.of(context).textTheme.labelMedium,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary),
                     ),
                   ],
                 ),

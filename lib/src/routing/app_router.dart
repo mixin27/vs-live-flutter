@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_screen.dart';
+import 'package:vs_live/src/features/football_highlight/presentation/highlight_player_screen/highlight_player_screen.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_detail/live_match_detail_screen.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_screen.dart';
@@ -29,6 +30,7 @@ enum AppRoute {
   settings,
   privacyPolicy,
   highlights,
+  highlightPlayer
 }
 
 @riverpod
@@ -139,6 +141,19 @@ GoRouter goRouter(GoRouterRef ref) {
         pageBuilder: (context, state) => const NoTransitionPage(
           child: HighlightFeedScreen(),
         ),
+      ),
+      GoRoute(
+        path: '/highlight-player',
+        name: AppRoute.highlightPlayer.name,
+        pageBuilder: (context, state) {
+          // final extra = state.extra as Map<String, dynamic>;
+          final embedVideo = state.uri.queryParameters["embedVideo"];
+          return NoTransitionPage(
+            child: HighlightPlayerScreen(
+              embedVideo: embedVideo ?? '',
+            ),
+          );
+        },
       ),
     ],
     errorPageBuilder: (context, state) => const NoTransitionPage(
