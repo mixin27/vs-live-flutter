@@ -621,14 +621,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  native_id:
-    dependency: "direct main"
-    description:
-      name: native_id
-      sha256: b776367d80b7b4cdc13f1b2bca06166d24f57a964f0a0284baf7a9cf47d15c26
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.5"
   nested:
     dependency: transitive
     description:
