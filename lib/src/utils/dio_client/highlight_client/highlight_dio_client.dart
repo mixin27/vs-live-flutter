@@ -46,5 +46,24 @@ class HighlightDioClient {
 
 @riverpod
 Dio highlightDioClient(HighlightDioClientRef ref) {
-  return HighlightDioClient().instance;
+  final dio = Dio()
+    ..options = BaseOptions(
+      baseUrl: "https://free-football-soccer-videos.p.rapidapi.com",
+      headers: {
+        Headers.acceptHeader: Headers.jsonContentType,
+        Headers.contentTypeHeader: Headers.jsonContentType,
+      },
+    )
+    ..interceptors.addAll([
+      if (!kReleaseMode)
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+        ),
+      HighlightAuthInterceptor(),
+      // AppInterceptor(),
+    ]);
+
+  return dio;
 }

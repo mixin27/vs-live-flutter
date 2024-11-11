@@ -33,6 +33,8 @@ class FootballHighlightRepository {
 
 @riverpod
 FootballHighlightRepository footballHighlightRepository(
-    FootballHighlightRepositoryRef ref) {
-  return FootballHighlightRepository();
+  FootballHighlightRepositoryRef ref,
+  Dio? client,
+) {
+  return FootballHighlightRepository(dioClient: client);
 }

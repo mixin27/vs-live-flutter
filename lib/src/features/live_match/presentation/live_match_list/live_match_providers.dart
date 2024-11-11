@@ -1,13 +1,16 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/features/live_match/data/live_match_repository.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
+import 'package:vs_live/src/utils/extensions/riverpod_extensions.dart';
 
 part 'live_match_providers.g.dart';
 
 @riverpod
 class GetAllLiveMatch extends _$GetAllLiveMatch {
   Future<List<LiveMatch>> _fetch() async {
-    final repository = ref.watch(liveMatchRepositoryProvider);
+    final client = await ref.getDebouncedDefaultClient();
+
+    final repository = ref.watch(liveMatchRepositoryProvider(client));
     final result = await repository.fetchAllLiveMatch();
     return result.data ?? [];
   }
@@ -15,11 +18,6 @@ class GetAllLiveMatch extends _$GetAllLiveMatch {
   @override
   Future<List<LiveMatch>> build() {
     return _fetch();
-  }
-
-  Future<void> refresh() async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(_fetch);
   }
 }
 
@@ -59,14 +57,4 @@ class SearchLiveMatches extends _$SearchLiveMatches {
   void clear() {
     state = [];
   }
-}
-
-@riverpod
-class SearchKeyword extends _$SearchKeyword {
-  @override
-  String build() {
-    return '';
-  }
-
-  void update(String keyword) => state = keyword;
 }

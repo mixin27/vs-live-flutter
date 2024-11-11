@@ -90,9 +90,7 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
                 ),
                 const SizedBox(height: Sizes.p16),
                 TextButton(
-                  onPressed: () {
-                    ref.read(getAllLiveMatchProvider.notifier).refresh();
-                  },
+                  onPressed: () => ref.refresh(getAllLiveMatchProvider.future),
                   child: Text("Retry".hardcoded),
                 ),
               ],
@@ -123,9 +121,8 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
                   ),
                   const SizedBox(height: Sizes.p16),
                   TextButton(
-                    onPressed: () {
-                      ref.read(getAllLiveMatchProvider.notifier).refresh();
-                    },
+                    onPressed: () =>
+                        ref.refresh(getAllLiveMatchProvider.future),
                     child: Text("Refresh".hardcoded),
                   ),
                 ],

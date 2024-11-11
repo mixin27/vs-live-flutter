@@ -90,9 +90,8 @@ class _FootballHighlightsListState
                 ),
                 const SizedBox(height: Sizes.p16),
                 TextButton(
-                  onPressed: () {
-                    ref.read(getAllHighlightsFeedProvider.notifier).refresh();
-                  },
+                  onPressed: () =>
+                      ref.refresh(getAllHighlightsFeedProvider.future),
                   child: Text("Retry".hardcoded),
                 ),
               ],
@@ -123,9 +122,8 @@ class _FootballHighlightsListState
                   ),
                   const SizedBox(height: Sizes.p16),
                   TextButton(
-                    onPressed: () {
-                      ref.read(getAllHighlightsFeedProvider.notifier).refresh();
-                    },
+                    onPressed: () =>
+                        ref.refresh(getAllHighlightsFeedProvider.future),
                     child: Text("Refresh".hardcoded),
                   ),
                 ],

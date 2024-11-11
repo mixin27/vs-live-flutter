@@ -58,6 +58,9 @@ class LiveMatchRepository {
 }
 
 @riverpod
-LiveMatchRepository liveMatchRepository(LiveMatchRepositoryRef ref) {
-  return LiveMatchRepository();
+LiveMatchRepository liveMatchRepository(
+  LiveMatchRepositoryRef ref,
+  Dio? client,
+) {
+  return LiveMatchRepository(dioClient: client);
 }

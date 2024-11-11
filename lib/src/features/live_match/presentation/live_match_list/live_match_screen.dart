@@ -94,9 +94,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
           Consumer(
             builder: (context, ref, child) {
               return CupertinoSliverRefreshControl(
-                onRefresh: () async {
-                  await ref.read(getAllLiveMatchProvider.notifier).refresh();
-                },
+                onRefresh: () => ref.refresh(getAllLiveMatchProvider.future),
               );
             },
           ),

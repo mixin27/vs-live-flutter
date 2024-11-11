@@ -80,11 +80,8 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
           Consumer(
             builder: (context, ref, child) {
               return CupertinoSliverRefreshControl(
-                onRefresh: () async {
-                  await ref
-                      .read(getAllHighlightsFeedProvider.notifier)
-                      .refresh();
-                },
+                onRefresh: () =>
+                    ref.refresh(getAllHighlightsFeedProvider.future),
               );
             },
           ),

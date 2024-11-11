@@ -1,13 +1,16 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/features/football_highlight/data/football_highlight_repository.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
+import 'package:vs_live/src/utils/extensions/riverpod_extensions.dart';
 
 part 'highlight_feed_providers.g.dart';
 
 @riverpod
 class GetAllHighlightsFeed extends _$GetAllHighlightsFeed {
   Future<List<FootballHighlight>> _fetch() async {
-    final repository = ref.watch(footballHighlightRepositoryProvider);
+    final client = await ref.getDebouncedHighlightClient();
+
+    final repository = ref.watch(footballHighlightRepositoryProvider(client));
     final result = await repository.fetchFeed();
     return result;
   }
@@ -15,11 +18,6 @@ class GetAllHighlightsFeed extends _$GetAllHighlightsFeed {
   @override
   FutureOr<List<FootballHighlight>> build() {
     return _fetch();
-  }
-
-  Future<void> refresh() async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(_fetch);
   }
 }
 
@@ -47,14 +45,4 @@ class SearchHighlights extends _$SearchHighlights {
   void clear() {
     state = [];
   }
-}
-
-@riverpod
-class SearchHighlightsKeyword extends _$SearchHighlightsKeyword {
-  @override
-  String build() {
-    return '';
-  }
-
-  void update(String keyword) => state = keyword;
 }

@@ -47,5 +47,23 @@ class DioClient {
 
 @riverpod
 Dio defaultDioClient(DefaultDioClientRef ref) {
-  return DioClient().instance;
+  final dio = Dio()
+    ..options = BaseOptions(
+      baseUrl: Env.baseUrl,
+      headers: {
+        Headers.acceptHeader: Headers.jsonContentType,
+        Headers.contentTypeHeader: Headers.jsonContentType,
+      },
+    )
+    ..interceptors.addAll([
+      if (!kReleaseMode)
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+        ),
+      AuthInterceptor(),
+      AppInterceptor(),
+    ]);
+  return dio;
 }
