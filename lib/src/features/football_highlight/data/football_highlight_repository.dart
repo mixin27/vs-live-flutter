@@ -14,9 +14,9 @@ class FootballHighlightRepository {
 
   final Dio _client;
 
-  Future<List<FootballHighlight>> fetchFeed() async {
+  Future<List<FootballHighlight>> fetchFeed({CancelToken? cancelToken}) async {
     try {
-      final response = await _client.get('/');
+      final response = await _client.get('/', cancelToken: cancelToken);
 
       final data = response.data as List<dynamic>;
       final result = data

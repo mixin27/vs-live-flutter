@@ -52,7 +52,7 @@ extension DebounceAndCancelExtension on Ref {
 
     // We now create the client and close it when the provider is disposed.
     final client = read(highlightDioClientProvider);
-    onDispose(client.close);
+    // onDispose(client.close);
 
     // Finally, we return the client to allow our provider to make the request.
     return client;

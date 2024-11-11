@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/features/football_highlight/data/football_highlight_repository.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
@@ -9,9 +10,13 @@ part 'highlight_feed_providers.g.dart';
 class GetAllHighlightsFeed extends _$GetAllHighlightsFeed {
   Future<List<FootballHighlight>> _fetch() async {
     final client = await ref.getDebouncedHighlightClient();
+    final cancelToken = CancelToken();
+    ref.onDispose(() {
+      cancelToken.cancel();
+    });
 
     final repository = ref.watch(footballHighlightRepositoryProvider(client));
-    final result = await repository.fetchFeed();
+    final result = await repository.fetchFeed(cancelToken: cancelToken);
     return result;
   }
 
