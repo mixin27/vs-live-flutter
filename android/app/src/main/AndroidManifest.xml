@@ -37,6 +37,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data
+            android:name="com.onesignal.NotificationServiceExtension"
+            android:value="com.billion.sport_live.NotificationServiceExtension" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

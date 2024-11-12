@@ -6,6 +6,8 @@ import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/widgets/match_info_widget.dart';
 import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/format.dart';
+import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
+import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
 class LiveMatchDetailScreen extends ConsumerStatefulWidget {
@@ -35,6 +37,38 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
     final dateStr = Format.parseAndFormatMatchDateTime(
       widget.match.startedDate,
       widget.match.startedTime,
+    );
+
+    final emptyWidget = SliverList.list(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(Sizes.p16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const ErrorStatusIconWidget(
+                icon: Icons.sports_soccer_outlined,
+              ),
+              const SizedBox(height: Sizes.p16),
+              Text(
+                "No available links found".hardcoded,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: Sizes.p4),
+              Text(
+                "May be the match has not been started yet".hardcoded,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7)),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
 
     return Scaffold(
@@ -88,7 +122,8 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
               ],
             ),
           ),
-          LiveLinkList(links: links),
+          if (links.isNotEmpty) LiveLinkList(links: links),
+          if (links.isEmpty) emptyWidget,
         ],
       ),
     );
@@ -144,6 +179,14 @@ class _LiveLinkItemState extends State<LiveLinkItem> {
             ? VideoType.iframe.name
             : VideoType.normal.name;
 
+    final resolutionIcon =
+        switch (widget.link.resolution.trim().toLowerCase()) {
+      "fhd" => Icons.hd,
+      "hd" => Icons.hd_outlined,
+      "sd" => Icons.sd_outlined,
+      _ => Icons.link_outlined,
+    };
+
     return ListTile(
       onTap: () {
         setState(() {
@@ -162,7 +205,7 @@ class _LiveLinkItemState extends State<LiveLinkItem> {
             isSelected ? Theme.of(context).colorScheme.secondary : null,
         foregroundColor:
             isSelected ? Theme.of(context).colorScheme.onSecondary : null,
-        child: const Icon(Icons.sd_outlined),
+        child: Icon(resolutionIcon),
       ),
       title: Text(widget.link.name),
       shape: RoundedRectangleBorder(

@@ -7,6 +7,7 @@ import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_providers.dart';
 import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
+import 'package:vs_live/src/utils/onesignal/onesignal.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
 import 'widgets/live_match_list_widget.dart';
@@ -20,6 +21,12 @@ class LiveMatchScreen extends StatefulWidget {
 
 class _LiveMatchScreenState extends State<LiveMatchScreen> {
   int _selectedView = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    initOnesignal();
+  }
 
   @override
   Widget build(BuildContext context) {

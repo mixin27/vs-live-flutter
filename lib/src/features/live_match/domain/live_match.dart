@@ -106,6 +106,7 @@ class LiveLink extends Equatable {
     required this.id,
     required this.name,
     required this.url,
+    required this.resolution,
     required this.matchId,
     this.type,
   });
@@ -113,6 +114,7 @@ class LiveLink extends Equatable {
   final int id;
   final String name;
   final String url;
+  final String resolution;
 
   @JsonKey(name: 'link_type')
   final LiveLinkType? type;
@@ -124,7 +126,7 @@ class LiveLink extends Equatable {
       _$LiveLinkFromJson(json);
 
   @override
-  List<Object?> get props => [id, name, url, matchId];
+  List<Object?> get props => [id, name, url, matchId, resolution];
 
   @override
   bool? get stringify => true;

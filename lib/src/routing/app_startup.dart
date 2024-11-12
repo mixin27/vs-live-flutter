@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/onboarding/data/onboarding_repository.dart';
-import 'package:vs_live/src/utils/onesignal/onesignal.dart';
 
 part 'app_startup.g.dart';
 
@@ -15,7 +14,6 @@ Future<void> appStartup(AppStartupRef ref) async {
   });
   // await for all initialization code to be complete before returning
   await Future.wait([
-    initOnesignal(),
     ref.watch(onboardingRepositoryProvider.future),
   ]);
 }

@@ -9,6 +9,7 @@ import 'package:vs_live/src/features/football_highlight/presentation/feed/highli
 import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
+import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 import 'package:vs_live/src/widgets/glassmorphism/glassmorphism.dart';
 
 enum ViewType {
@@ -78,23 +79,18 @@ class _FootballHighlightsListState
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.wifi_off_outlined,
-                  size: 45,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-                ),
+                const ErrorStatusIconWidget(),
                 const SizedBox(height: Sizes.p16),
                 Text(
                   error.toString(),
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: Sizes.p16),
-                TextButton(
+                FilledButton(
                   onPressed: () =>
                       ref.refresh(getAllHighlightsFeedProvider.future),
-                  child: Text("Retry".hardcoded),
+                  child: Text("Try again".hardcoded),
                 ),
               ],
             ),
@@ -107,23 +103,27 @@ class _FootballHighlightsListState
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.sports_soccer_outlined,
-                    size: 45,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.8),
+                  const ErrorStatusIconWidget(
+                    icon: Icons.sports_soccer_outlined,
                   ),
                   const SizedBox(height: Sizes.p16),
                   Text(
-                    "Currently, no highlights available from the server. Please come back later."
-                        .hardcoded,
+                    "No highlights available from the server".hardcoded,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: Sizes.p4),
+                  Text(
+                    "Please come back later".hardcoded,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7)),
                   ),
                   const SizedBox(height: Sizes.p16),
-                  TextButton(
+                  FilledButton(
                     onPressed: () =>
                         ref.refresh(getAllHighlightsFeedProvider.future),
                     child: Text("Refresh".hardcoded),

@@ -1,7 +1,7 @@
 name: vs_live
 description: "VS football live application."
 publish_to: "none"
-version: 1.0.5+6
+version: 1.0.6+7
 
 environment:
   sdk: ^3.5.3
@@ -34,7 +34,7 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_markdown: ^0.7.4+1
   onesignal_flutter: ^5.2.7
-  # native_id: ^0.0.5
+  native_id: ^0.0.5
 
 dev_dependencies:
   flutter_test:
