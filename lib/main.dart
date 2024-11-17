@@ -6,6 +6,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vs_live/src/errors/async_error_logger.dart';
 import 'package:vs_live/src/errors/error_logger.dart';
+import 'package:vs_live/src/utils/ads/ads_helper.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 
 import 'src/app.dart';
@@ -15,7 +16,9 @@ late SharedPreferences sharedPreferences;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   sharedPreferences = await SharedPreferences.getInstance();
+  await AdsHelper.initAds();
 
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
