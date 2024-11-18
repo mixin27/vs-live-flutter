@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +29,9 @@ class LiveMatchScreen extends StatefulWidget {
 class _LiveMatchScreenState extends State<LiveMatchScreen> {
   int _selectedView = 0;
 
+  late AppLinks _appLinks;
+  StreamSubscription<Uri>? _linkSubscription;
+
   @override
   void initState() {
     // Record a visit to this page.
@@ -32,6 +39,22 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
 
     super.initState();
     initOnesignal();
+    initDeepLinks();
+  }
+
+  Future<void> initDeepLinks() async {
+    _appLinks = AppLinks();
+
+    // Handle links
+    _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
+      debugPrint('onAppLink: $uri');
+      openAppLink(uri);
+    });
+  }
+
+  void openAppLink(Uri uri) {
+    log("fragment: ${uri.path}");
+    context.go(uri.path);
   }
 
   @override
@@ -139,6 +162,12 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
 }
 
 class CustomSearchField extends ConsumerStatefulWidget {
@@ -176,6 +205,7 @@ class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
   @override
   void dispose() {
     _searchController.dispose();
+
     super.dispose();
   }
 }
