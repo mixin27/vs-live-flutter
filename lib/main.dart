@@ -1,16 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 // ignore:depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vs_live/firebase_options.dart';
 import 'package:vs_live/src/errors/async_error_logger.dart';
 import 'package:vs_live/src/errors/error_logger.dart';
-import 'package:vs_live/src/utils/ads/ads_helper.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 
 import 'src/app.dart';
 import 'src/config/constants/app_sizes.dart';
+import 'src/utils/ads/ad_helper.dart';
+import 'src/utils/remote_config/remote_config.dart';
 
 late SharedPreferences sharedPreferences;
 
@@ -18,7 +22,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   sharedPreferences = await SharedPreferences.getInstance();
-  await AdsHelper.initAds();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await AppRemoteConfig.initConfig();
+  await AdHelper.initAds();
 
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
@@ -47,12 +56,18 @@ void registerErrorHandlers(ErrorLogger errorLogger) {
     errorLogger.logError(details.exception, details.stack);
 
     // Crashlytics report will be here if needed
+    // if (kReleaseMode) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    // }
   };
   // * Handle errors from the underlying platform/OS
   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
     errorLogger.logError(error, stack);
 
     // Crashlytics report will be here if needed
+    // if (kReleaseMode) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    // }
     return true;
   };
   // * Show some error UI when any widget in the app fails to build

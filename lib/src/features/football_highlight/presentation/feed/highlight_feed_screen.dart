@@ -7,6 +7,7 @@ import 'package:vs_live/src/features/football_highlight/domain/football_highligh
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/widgets/football_highlights_list.dart';
 import 'package:vs_live/src/routing/app_router.dart';
+import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
@@ -19,6 +20,15 @@ class HighlightFeedScreen extends StatefulWidget {
 
 class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
   int _selectedView = 0;
+
+  @override
+  void initState() {
+    // Record a visit to this page.
+    AnalyticsUtil.logScreenView(
+      screenName: 'HighlightFeedScreen',
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

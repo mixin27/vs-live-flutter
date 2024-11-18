@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/errors/exceptions.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
@@ -59,7 +60,7 @@ class LiveMatchRepository {
 
 @riverpod
 LiveMatchRepository liveMatchRepository(
-  LiveMatchRepositoryRef ref,
+  Ref ref,
   Dio? client,
 ) {
   return LiveMatchRepository(dioClient: client);

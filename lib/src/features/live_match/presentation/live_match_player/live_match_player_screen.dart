@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
 class LiveMatchPlayerScreen extends StatefulWidget {
@@ -19,6 +20,11 @@ class LiveMatchPlayerScreen extends StatefulWidget {
 class _LiveMatchPlayerScreenState extends State<LiveMatchPlayerScreen> {
   @override
   void initState() {
+    // Record a visit to this page.
+    AnalyticsUtil.logScreenView(
+      screenName: 'LiveMatchPlayerScreen',
+    );
+
     super.initState();
 
     SystemChrome.setPreferredOrientations([

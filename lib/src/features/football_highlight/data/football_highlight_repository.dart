@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/utils/dio_client/highlight_client/highlight_dio_client.dart';
@@ -33,7 +34,7 @@ class FootballHighlightRepository {
 
 @riverpod
 FootballHighlightRepository footballHighlightRepository(
-  FootballHighlightRepositoryRef ref,
+  Ref ref,
   Dio? client,
 ) {
   return FootballHighlightRepository(dioClient: client);

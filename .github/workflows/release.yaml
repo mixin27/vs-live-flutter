@@ -103,6 +103,28 @@ jobs:
           echo "keyPassword=${{ secrets.RELEASE_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.RELEASE_KEYSTORE_ALIAS }}" >> android/key.properties
 
+      - name: Download Google Play Services JSON
+        id: google_services
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'google-services.json'
+          encodedString: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+      - name: Create google-services.json
+        run: |
+          cp "${{ steps.google_services.outputs.filePath }}" android/app/
+
+      - name: Download firebase_options.dart
+        id: firebase_options
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'firebase_options.dart'
+          encodedString: ${{ secrets.FIREBASE_OPTION_DART }}
+
+      - name: Create firebase_options.dart
+        run: |
+          cp "${{ steps.firebase_options.outputs.filePath }}" lib/
+
       # Build apk
       # --dart-define BASE_URL=${{ secrets.BASE_URL }} --dart-define API_KEY=${{ secrets.API_KEY }} 
       - name: Build prod APK

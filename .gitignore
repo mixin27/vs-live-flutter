@@ -74,3 +74,5 @@ android/app/google-services.json
 **/*.g.dart
 **/*.gen.dart
 **/*.gr.dart
+
+base64/

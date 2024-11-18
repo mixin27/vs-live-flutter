@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/config/env.dart';
@@ -46,7 +47,7 @@ class DioClient {
 }
 
 @riverpod
-Dio defaultDioClient(DefaultDioClientRef ref) {
+Dio defaultDioClient(Ref ref) {
   final dio = Dio()
     ..options = BaseOptions(
       baseUrl: Env.baseUrl,

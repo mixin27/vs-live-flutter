@@ -1,0 +1,22 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "billion-sport-live",
+          "appId": "1:161029256655:android:4f7c72218dc530385aceba",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "billion-sport-live",
+          "configurations": {
+            "android": "1:161029256655:android:4f7c72218dc530385aceba",
+            "ios": "1:161029256655:ios:c32c7ac24f67354d5aceba"
+          }
+        }
+      }
+    }
+  }
+}

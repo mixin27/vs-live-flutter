@@ -5,6 +5,7 @@ import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/widgets/match_info_widget.dart';
 import 'package:vs_live/src/routing/app_router.dart';
+import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
@@ -28,6 +29,10 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
 
   @override
   void initState() {
+    // Record a visit to this page.
+    AnalyticsUtil.logScreenView(
+      screenName: 'LiveMatchDetailScreen',
+    );
     super.initState();
   }
 

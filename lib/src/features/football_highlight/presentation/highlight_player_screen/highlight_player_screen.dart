@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/extensions/dart_extensions.dart';
 import 'package:vs_live/src/widgets/video_player/video_player_embed.dart';
 
@@ -18,6 +19,11 @@ class HighlightPlayerScreen extends StatefulWidget {
 class _HighlightPlayerScreenState extends State<HighlightPlayerScreen> {
   @override
   void initState() {
+    // Record a visit to this page.
+    AnalyticsUtil.logScreenView(
+      screenName: 'HighlightPlayerScreen',
+    );
+
     super.initState();
 
     SystemChrome.setPreferredOrientations([

@@ -6,8 +6,11 @@ import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_providers.dart';
 import 'package:vs_live/src/routing/app_router.dart';
+import 'package:vs_live/src/utils/ads/ad_helper.dart';
+import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/onesignal/onesignal.dart';
+import 'package:vs_live/src/widgets/ads/watch_ad_dialog.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
 import 'widgets/live_match_list_widget.dart';
@@ -24,6 +27,9 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
 
   @override
   void initState() {
+    // Record a visit to this page.
+    AnalyticsUtil.logScreenView(screenName: 'LiveMatchScreen');
+
     super.initState();
     initOnesignal();
   }
@@ -50,6 +56,32 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                   context.goNamed(AppRoute.settings.name);
                 },
                 icon: const Icon(Icons.settings_outlined),
+              ),
+              IconButton(
+                onPressed: () {
+                  // context.pushNamed(AppRoute.adsTest.name);
+                  showAdaptiveDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return WatchAdDialog(
+                        onComplete: () {
+                          AdHelper.showInterstitialAd(
+                            context,
+                            onComplete: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Yayy! You are rewarded!!!"),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.ad_units_sharp),
               ),
             ],
             bottom: AppBar(
