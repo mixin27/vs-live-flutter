@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/onboarding/data/onboarding_repository.dart';
-import 'package:vs_live/src/utils/ads/ad_helper.dart';
+// import 'package:vs_live/src/utils/ads/ad_helper.dart';
 
 part 'app_startup.g.dart';
 
@@ -14,8 +14,8 @@ Future<void> appStartup(Ref ref) async {
     ref.invalidate(onboardingRepositoryProvider);
   });
   // await for all initialization code to be complete before returning
-  AdHelper.precacheInterstitialAd();
-  AdHelper.precacheNativeAd();
+  // AdHelper.precacheInterstitialAd();
+  // AdHelper.precacheNativeAd();
   await Future.wait([
     ref.watch(onboardingRepositoryProvider.future),
   ]);

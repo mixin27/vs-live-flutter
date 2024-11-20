@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 
 class AppRemoteConfig {
   static final _config = FirebaseRemoteConfig.instance;
@@ -37,10 +38,17 @@ class AppRemoteConfig {
   static bool get hideAds => !_showAds;
 
   // ad ids
-  static String get nativeId => _config.getString('native_ad');
-  static String get bannerId => _config.getString('banner_ad');
-  static String get interstitialId => _config.getString('interstitial_ad');
-  static String get rewardedId => _config.getString('rewarded_ad');
+  static String get nativeId => !kReleaseMode
+      ? "ca-app-pub-3940256099942544/2247696110"
+      : _config.getString('native_ad');
+  static String get bannerId => !kReleaseMode
+      ? "ca-app-pub-3940256099942544/9214589741"
+      : _config.getString('banner_ad');
+  static String get interstitialId => !kReleaseMode
+      ? "ca-app-pub-3940256099942544/1033173712"
+      : _config.getString('interstitial_ad');
+  static String get rewardedId =>
+      !kReleaseMode ? "" : _config.getString('rewarded_ad');
 
   // app update
   static int get latestBuildNumber => _config.getInt('latest_build');

@@ -1,16 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
-import 'package:vs_live/src/routing/app_router.dart';
-import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
+import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
-import 'package:vs_live/src/widgets/glassmorphism/glassmorphism.dart';
+
+import 'highlight_grid_view.dart';
+import 'highlight_list_view.dart';
 
 enum ViewType {
   list,
@@ -33,6 +33,51 @@ class FootballHighlightsList extends ConsumerStatefulWidget {
 class _FootballHighlightsListState
     extends ConsumerState<FootballHighlightsList> {
   List<FootballHighlight> _highlights = List.empty();
+
+  BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadAd();
+  }
+
+  Future<void> loadAd() async {
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    // final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+    //     MediaQuery.sizeOf(context).width.truncate());
+
+    final ad = BannerAd(
+      adUnitId: AppRemoteConfig.bannerId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          debugPrint('$ad loaded.');
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('BannerAd failed to load: $err');
+          // Dispose the ad here to free resources.
+          ad.dispose();
+        },
+      ),
+    )..load();
+    setState(() {
+      _bannerAd = ad;
+    });
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +137,15 @@ class _FootballHighlightsListState
                       ref.refresh(getAllHighlightsFeedProvider.future),
                   child: Text("Try again".hardcoded),
                 ),
+                gapH12,
+                if (_bannerAd != null && _isAdLoaded)
+                  SafeArea(
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: _bannerAd!.size.height.toDouble(),
+                      child: AdWidget(ad: _bannerAd!),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -128,252 +182,20 @@ class _FootballHighlightsListState
                         ref.refresh(getAllHighlightsFeedProvider.future),
                     child: Text("Refresh".hardcoded),
                   ),
+                  gapH12,
+                  if (_bannerAd != null && _isAdLoaded)
+                    SafeArea(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: _bannerAd!.size.height.toDouble(),
+                        child: AdWidget(ad: _bannerAd!),
+                      ),
+                    ),
                 ],
               ),
             ),
           ],
         ),
     };
-  }
-}
-
-class HighlightGridView extends ConsumerWidget {
-  const HighlightGridView({super.key, required this.highlights});
-
-  final List<FootballHighlight> highlights;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SliverGrid.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: highlights.length,
-      itemBuilder: (context, index) {
-        final highlight = highlights[index];
-
-        return Padding(
-          padding: EdgeInsets.only(
-            left: index % 2 != 0 ? 0 : 16,
-            right: index % 2 == 0 ? 0 : 16,
-          ),
-          child: HighlightGridItem(highlight: highlight),
-        );
-      },
-    );
-  }
-}
-
-class HighlightGridItem extends ConsumerWidget {
-  const HighlightGridItem({super.key, required this.highlight});
-
-  final FootballHighlight highlight;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(20),
-      onTap: () {
-        context.pushNamed(
-          AppRoute.highlightPlayer.name,
-          queryParameters: {
-            "embedVideo": highlight.embed,
-          },
-        );
-      },
-      child: GlassmorphicContainer(
-        borderRadius: 20,
-        border: 0,
-        blur: 20,
-        linearGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-            Theme.of(context).colorScheme.secondary.withOpacity(0.08),
-          ],
-          stops: const [0.1, 1],
-        ),
-        borderGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-            Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-          ],
-        ),
-        child: GridTile(
-          header: GridTileBar(
-            // backgroundColor: Theme.of(context).cardColor,
-            title: Text(
-              highlight.competition.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge
-                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-          ),
-          footer: GridTileBar(
-            // backgroundColor: Theme.of(context).cardColor,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                gapH8,
-                Text(
-                  highlight.title,
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-                Text(
-                  Format.format(DateTime.parse(highlight.date)),
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-              ],
-            ),
-          ),
-          child: CachedNetworkImage(
-            imageUrl: highlight.thumbnail,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            placeholder: (context, url) => const CupertinoActivityIndicator(),
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.broken_image_outlined),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HighlightListView extends ConsumerWidget {
-  const HighlightListView({super.key, required this.highlights});
-
-  final List<FootballHighlight> highlights;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SliverList.builder(
-      itemCount: highlights.length,
-      itemBuilder: (context, index) => HighlightListItem(
-        highlight: highlights[index],
-      ),
-    );
-  }
-}
-
-class HighlightListItem extends ConsumerWidget {
-  const HighlightListItem({super.key, required this.highlight});
-
-  final FootballHighlight highlight;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Sizes.p16,
-        vertical: Sizes.p8,
-      ),
-      child: InkWell(
-        onTap: () {
-          context.pushNamed(
-            AppRoute.highlightPlayer.name,
-            queryParameters: {
-              "embedVideo": highlight.embed,
-            },
-          );
-        },
-        borderRadius: BorderRadius.circular(25),
-        child: GlassmorphicContainer(
-          borderRadius: 20,
-          border: 0,
-          blur: 20,
-          linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.08),
-            ],
-            stops: const [0.1, 1],
-          ),
-          borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CachedNetworkImage(
-                imageUrl: highlight.thumbnail,
-                imageBuilder: (context, imageProvider) => Container(
-                  height: 180,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                placeholder: (context, url) => const SizedBox(
-                  height: 180,
-                  child: CupertinoActivityIndicator(radius: 30),
-                ),
-                errorWidget: (context, url, error) => SizedBox(
-                  height: 180,
-                  child: Center(
-                    child: Icon(
-                      Icons.broken_image_outlined,
-                      size: 180,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Sizes.p16, vertical: Sizes.p8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      highlight.competition.name,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary),
-                    ),
-                    gapH4,
-                    Text(
-                      highlight.title,
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    gapH4,
-                    Text(
-                      Format.format(DateTime.parse(highlight.date)),
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

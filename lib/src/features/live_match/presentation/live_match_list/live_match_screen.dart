@@ -5,6 +5,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
@@ -14,7 +15,7 @@ import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/onesignal/onesignal.dart';
-import 'package:vs_live/src/widgets/ads/watch_ad_dialog.dart';
+import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
 import 'widgets/live_match_list_widget.dart';
@@ -32,6 +33,9 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   late AppLinks _appLinks;
   StreamSubscription<Uri>? _linkSubscription;
 
+  BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
+
   @override
   void initState() {
     // Record a visit to this page.
@@ -40,6 +44,36 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
     super.initState();
     initOnesignal();
     initDeepLinks();
+
+    AdHelper.showConsentUMP();
+
+    loadBannerAd();
+  }
+
+  void loadBannerAd() {
+    final ad = BannerAd(
+      adUnitId: AppRemoteConfig.bannerId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          debugPrint('$ad loaded.');
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('BannerAd failed to load: $err');
+          // Dispose the ad here to free resources.
+          ad.dispose();
+        },
+      ),
+    )..load();
+    setState(() {
+      _bannerAd = ad;
+    });
   }
 
   Future<void> initDeepLinks() async {
@@ -80,32 +114,32 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                 },
                 icon: const Icon(Icons.settings_outlined),
               ),
-              IconButton(
-                onPressed: () {
-                  // context.pushNamed(AppRoute.adsTest.name);
-                  showAdaptiveDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) {
-                      return WatchAdDialog(
-                        onComplete: () {
-                          AdHelper.showInterstitialAd(
-                            context,
-                            onComplete: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Yayy! You are rewarded!!!"),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-                icon: const Icon(Icons.ad_units_sharp),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     // context.pushNamed(AppRoute.adsTest.name);
+              //     showAdaptiveDialog(
+              //       context: context,
+              //       barrierDismissible: false,
+              //       builder: (context) {
+              //         return WatchAdDialog(
+              //           onComplete: () {
+              //             AdHelper.showInterstitialAd(
+              //               context,
+              //               onComplete: () {
+              //                 ScaffoldMessenger.of(context).showSnackBar(
+              //                   const SnackBar(
+              //                     content: Text("Yayy! You are rewarded!!!"),
+              //                   ),
+              //                 );
+              //               },
+              //             );
+              //           },
+              //         );
+              //       },
+              //     );
+              //   },
+              //   icon: const Icon(Icons.ad_units_sharp),
+              // ),
             ],
             bottom: AppBar(
               title: Row(
@@ -154,7 +188,17 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
               );
             },
           ),
-          SliverList.list(children: const [SizedBox(height: 20)]),
+          SliverList.list(children: [
+            if (_bannerAd != null && _isAdLoaded)
+              SafeArea(
+                child: SizedBox(
+                  width: double.infinity,
+                  height: _bannerAd!.size.height.toDouble(),
+                  child: AdWidget(ad: _bannerAd!),
+                ),
+              ),
+            const SizedBox(height: 20),
+          ]),
           LiveMatchListWidget(
             viewType: isGridView ? ViewType.grid : ViewType.list,
           ),
@@ -166,6 +210,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   @override
   void dispose() {
     _linkSubscription?.cancel();
+    _bannerAd?.dispose();
     super.dispose();
   }
 }
