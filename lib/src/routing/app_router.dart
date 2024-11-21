@@ -23,7 +23,7 @@ import 'scaffold_with_nested_navigation.dart';
 part 'app_router.g.dart';
 
 // private navigators
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _liveMatchesNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'live-matches');
 final _highlightsNavigatorKey =
@@ -48,7 +48,7 @@ GoRouter goRouter(Ref ref) {
   final appStartupState = ref.watch(appStartupProvider);
 
   return GoRouter(
-    navigatorKey: _rootNavigatorKey,
+    navigatorKey: rootNavigatorKey,
     initialLocation: '/home',
     debugLogDiagnostics: !kReleaseMode,
     redirect: (context, state) {

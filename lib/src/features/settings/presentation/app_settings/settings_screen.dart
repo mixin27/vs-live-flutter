@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/settings/notification_list_tile.dart';
@@ -13,12 +14,22 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  PackageInfo? _packageInfo;
+
   @override
   void initState() {
     // Record a visit to this page.
     AnalyticsUtil.logScreenView(screenName: 'SettingsScreen');
 
     super.initState();
+    _loadPackageInfo();
+  }
+
+  Future<void> _loadPackageInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = packageInfo;
+    });
   }
 
   @override
@@ -35,7 +46,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           AboutListTile(
             icon: const Icon(Icons.info_outline),
             applicationName: "Billion Sport Live",
-            applicationVersion: 'v1.0.1',
+            applicationVersion:
+                _packageInfo == null ? "" : 'v${_packageInfo?.version}',
             applicationIcon: Image.asset(
               "assets/images/logo_gradient.png",
               width: 30,

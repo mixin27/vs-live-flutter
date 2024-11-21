@@ -7,13 +7,14 @@ class AppRemoteConfig {
   static final _config = FirebaseRemoteConfig.instance;
 
   static const _defaultValues = {
+    "latest_build": 1,
+    "latest_version": "1.0.0",
+    "force_update": false,
     "banner_ad": "ca-app-pub-7567997114394639/8648546201",
     "interstitial_ad": "ca-app-pub-7567997114394639/1475405831",
     "native_ad": "ca-app-pub-7567997114394639/9425876604",
     "rewarded_ad": "ca-app-pub-7567997114394639/8288226195",
     "show_ads": true,
-    "latest_build": 1,
-    "latest_version": "1.0.0",
   };
 
   static Future<void> initConfig() async {
@@ -53,4 +54,5 @@ class AppRemoteConfig {
   // app update
   static int get latestBuildNumber => _config.getInt('latest_build');
   static String get latestVersion => _config.getString('latest_version');
+  static bool get forceUpdate => _config.getBool('force_update');
 }
