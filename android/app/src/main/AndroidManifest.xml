@@ -42,7 +42,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data 
                     android:scheme="https" 
-                    android:host="www.kyawzayartun.com" 
+                    android:host="kyawzayartun.com" 
                     android:pathPrefix="/bsl" />
             </intent-filter>
 

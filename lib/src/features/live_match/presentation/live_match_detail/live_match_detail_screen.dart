@@ -29,8 +29,11 @@ class LiveMatchDetailScreen extends ConsumerStatefulWidget {
 class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
   late Widget videoWidget;
 
-  NativeAd? ad;
-  bool _isAdLoaded = false;
+  NativeAd? _nativeAd;
+  bool _isNativeAdLoaded = false;
+
+  BannerAd? _bannerAd;
+  bool _isBannerAdLoaded = false;
 
   @override
   void initState() {
@@ -40,10 +43,31 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
     );
     super.initState();
 
-    ad = AdHelper.loadNativeAd(onLoaded: () {
+    loadNativeAd();
+    loadBannerAd();
+  }
+
+  void loadNativeAd() {
+    final ad = AdHelper.loadNativeAd(onLoaded: () {
       setState(() {
-        _isAdLoaded = true;
+        _isNativeAdLoaded = true;
       });
+    });
+
+    setState(() {
+      _nativeAd = ad;
+    });
+  }
+
+  void loadBannerAd() {
+    final ad = AdHelper.loadBannerAd(onLoaded: () {
+      setState(() {
+        _isBannerAdLoaded = true;
+      });
+    });
+
+    setState(() {
+      _bannerAd = ad;
     });
   }
 
@@ -88,14 +112,6 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
     );
 
     return Scaffold(
-      bottomNavigationBar: ad != null && _isAdLoaded
-          ? SafeArea(
-              child: SizedBox(
-                height: 85,
-                child: AdWidget(ad: ad!),
-              ),
-            )
-          : null,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
@@ -133,21 +149,40 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Sizes.p16,
-                    vertical: Sizes.p4,
-                  ),
-                  child: Divider(),
-                ),
-              ],
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Sizes.p16,
+                vertical: Sizes.p16,
+              ),
+              child: Divider(),
             ),
           ),
+          if (_bannerAd != null && _isBannerAdLoaded)
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: double.infinity,
+                height: _bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd!),
+              ),
+            ),
           if (links.isNotEmpty) LiveLinkList(links: links),
           if (links.isEmpty) emptyWidget,
+          SliverList.list(
+            children: [
+              if (_nativeAd != null && _isNativeAdLoaded)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Sizes.p16,
+                    vertical: Sizes.p16,
+                  ),
+                  child: SizedBox(
+                    height: 400,
+                    child: AdWidget(ad: _nativeAd!),
+                  ),
+                )
+            ],
+          ),
         ],
       ),
     );

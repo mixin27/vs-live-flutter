@@ -132,6 +132,7 @@ class _HighlightGridViewState extends ConsumerState<HighlightGridView> {
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
       ),
+      itemCount: widget.highlights.length,
       itemBuilder: (context, index) {
         final item = widget.highlights[index];
         return Padding(

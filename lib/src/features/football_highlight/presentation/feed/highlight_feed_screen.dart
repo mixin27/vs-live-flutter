@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,9 +10,9 @@ import 'package:vs_live/src/features/football_highlight/domain/football_highligh
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/widgets/football_highlights_list.dart';
 import 'package:vs_live/src/routing/app_router.dart';
+import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
-import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
 class HighlightFeedScreen extends StatefulWidget {
@@ -24,7 +26,10 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
   int _selectedView = 0;
 
   BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
+  bool _isBannerAdLoaded = false;
+
+  NativeAd? _nativeAd;
+  bool _isNativeAdLoaded = false;
 
   @override
   void initState() {
@@ -33,40 +38,37 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
       screenName: 'HighlightFeedScreen',
     );
     super.initState();
-    loadAd();
+    loadBannerAd();
+    loadNativeAd();
   }
 
-  Future<void> loadAd() async {
-    if (AppRemoteConfig.hideAds) return;
-
-    final ad = BannerAd(
-      adUnitId: AppRemoteConfig.bannerId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          debugPrint('$ad loaded.');
-          setState(() {
-            _isAdLoaded = true;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('BannerAd failed to load: $err');
-          // Dispose the ad here to free resources.
-          ad.dispose();
-        },
-      ),
-    )..load();
+  Future<void> loadBannerAd() async {
+    final ad = AdHelper.loadBannerAd(onLoaded: () {
+      log("banner ad loaded");
+      setState(() {
+        _isBannerAdLoaded = true;
+      });
+    });
     setState(() {
       _bannerAd = ad;
+    });
+  }
+
+  void loadNativeAd() {
+    final ad = AdHelper.loadNativeAd(onLoaded: () {
+      setState(() {
+        _isNativeAdLoaded = true;
+      });
+    });
+    setState(() {
+      _nativeAd = ad;
     });
   }
 
   @override
   void dispose() {
     _bannerAd?.dispose();
+    _nativeAd?.dispose();
     super.dispose();
   }
 
@@ -144,19 +146,32 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
             },
           ),
           SliverList.list(children: [
-            if (_bannerAd != null && _isAdLoaded)
-              SafeArea(
-                child: SizedBox(
-                  width: double.infinity,
-                  height: _bannerAd!.size.height.toDouble(),
-                  child: AdWidget(ad: _bannerAd!),
-                ),
+            if (_bannerAd != null && _isBannerAdLoaded)
+              SizedBox(
+                width: double.infinity,
+                height: _bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd!),
               ),
             const SizedBox(height: 20),
           ]),
           FootballHighlightsList(
             viewType: isGridView ? ViewType.grid : ViewType.list,
           ),
+          if (_nativeAd != null && _isNativeAdLoaded)
+            SliverList.list(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Sizes.p16,
+                    vertical: Sizes.p16,
+                  ),
+                  child: SizedBox(
+                    height: 150,
+                    child: AdWidget(ad: _nativeAd!),
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );

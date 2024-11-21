@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
 import 'package:vs_live/src/features/live_match/presentation/live_match_list/live_match_providers.dart';
-import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 
@@ -32,29 +30,6 @@ class LiveMatchListWidget extends ConsumerStatefulWidget {
 
 class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
   List<LiveMatch> _liveMatches = List.empty();
-
-  NativeAd? _nativeAd;
-  bool _isNativeAdLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final ad = AdHelper.loadNativeAd(onLoaded: () {
-      setState(() {
-        _isNativeAdLoaded = true;
-      });
-    });
-    setState(() {
-      _nativeAd = ad;
-    });
-  }
-
-  @override
-  void dispose() {
-    _nativeAd?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,13 +86,6 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
                   onPressed: () => ref.refresh(getAllLiveMatchProvider.future),
                   child: Text("Try again".hardcoded),
                 ),
-                if (_nativeAd != null && _isNativeAdLoaded)
-                  SafeArea(
-                    child: SizedBox(
-                      height: 400,
-                      child: AdWidget(ad: _nativeAd!),
-                    ),
-                  ),
               ],
             ),
           ),
@@ -154,13 +122,6 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
                         ref.refresh(getAllLiveMatchProvider.future),
                     child: Text("Refresh".hardcoded),
                   ),
-                  if (_nativeAd != null && _isNativeAdLoaded)
-                    SafeArea(
-                      child: SizedBox(
-                        height: 400,
-                        child: AdWidget(ad: _nativeAd!),
-                      ),
-                    ),
                 ],
               ),
             ),

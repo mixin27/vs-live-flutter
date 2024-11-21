@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/routing/app_router.dart';
+import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/format.dart';
-import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/glassmorphism/glassmorphism.dart';
 
 class HighlightListView extends ConsumerStatefulWidget {
@@ -34,28 +32,13 @@ class _HighlightListViewState extends ConsumerState<HighlightListView> {
   }
 
   void loadAd() async {
-    if (AppRemoteConfig.hideAds) return;
-
-    final ad = BannerAd(
-      adUnitId: AppRemoteConfig.bannerId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          log('$ad loaded.');
-          setState(() {
-            _isLoaded = true;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          log('BannerAd failed to load: $err');
-          // Dispose the ad here to free resources.
-          ad.dispose();
-        },
-      ),
-    )..load();
+    final ad = AdHelper.loadBannerAd(
+      onLoaded: () {
+        setState(() {
+          _isLoaded = true;
+        });
+      },
+    );
     setState(() {
       _bannerAd = ad;
     });

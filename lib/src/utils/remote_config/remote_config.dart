@@ -14,6 +14,7 @@ class AppRemoteConfig {
     "interstitial_ad": "ca-app-pub-7567997114394639/1475405831",
     "native_ad": "ca-app-pub-7567997114394639/9425876604",
     "rewarded_ad": "ca-app-pub-7567997114394639/8288226195",
+    "app_open_ad": "ca-app-pub-7567997114394639/7748304172",
     "show_ads": true,
   };
 
@@ -39,17 +40,21 @@ class AppRemoteConfig {
   static bool get hideAds => !_showAds;
 
   // ad ids
-  static String get nativeId => !kReleaseMode
+  static String get nativeAd => !kReleaseMode
       ? "ca-app-pub-3940256099942544/2247696110"
       : _config.getString('native_ad');
-  static String get bannerId => !kReleaseMode
+  static String get bannerAd => !kReleaseMode
       ? "ca-app-pub-3940256099942544/9214589741"
       : _config.getString('banner_ad');
-  static String get interstitialId => !kReleaseMode
+  static String get interstitialAd => !kReleaseMode
       ? "ca-app-pub-3940256099942544/1033173712"
       : _config.getString('interstitial_ad');
-  static String get rewardedId =>
-      !kReleaseMode ? "" : _config.getString('rewarded_ad');
+  static String get rewardedAd => !kReleaseMode
+      ? "ca-app-pub-3940256099942544/5224354917"
+      : _config.getString('rewarded_ad');
+  static String get appOpenAd => !kReleaseMode
+      ? "ca-app-pub-3940256099942544/9257395921"
+      : _config.getString('app_open_ad');
 
   // app update
   static int get latestBuildNumber => _config.getInt('latest_build');

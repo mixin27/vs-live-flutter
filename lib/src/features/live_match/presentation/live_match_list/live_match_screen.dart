@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +14,6 @@ import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/onesignal/onesignal.dart';
-import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
 import 'widgets/live_match_list_widget.dart';
@@ -36,45 +34,43 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   BannerAd? _bannerAd;
   bool _isAdLoaded = false;
 
+  NativeAd? _nativeAd;
+  bool _isNativeAdLoaded = false;
+
   @override
   void initState() {
     // Record a visit to this page.
     AnalyticsUtil.logScreenView(screenName: 'LiveMatchScreen');
-
     super.initState();
+
     initOnesignal();
     initDeepLinks();
 
-    AdHelper.showConsentUMP();
-
     loadBannerAd();
+    loadNativeAd();
   }
 
   void loadBannerAd() {
-    if (AppRemoteConfig.hideAds) return;
-
-    final ad = BannerAd(
-      adUnitId: AppRemoteConfig.bannerId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          debugPrint('$ad loaded.');
-          setState(() {
-            _isAdLoaded = true;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('BannerAd failed to load: $err');
-          // Dispose the ad here to free resources.
-          ad.dispose();
-        },
-      ),
-    )..load();
+    final ad = AdHelper.loadBannerAd(
+      onLoaded: () {
+        setState(() {
+          _isAdLoaded = true;
+        });
+      },
+    );
     setState(() {
       _bannerAd = ad;
+    });
+  }
+
+  void loadNativeAd() {
+    final ad = AdHelper.loadNativeAd(onLoaded: () {
+      setState(() {
+        _isNativeAdLoaded = true;
+      });
+    });
+    setState(() {
+      _nativeAd = ad;
     });
   }
 
@@ -89,8 +85,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   }
 
   void openAppLink(Uri uri) {
-    log("fragment: ${uri.path}");
-    context.go(uri.path);
+    context.go('/home');
   }
 
   @override
@@ -192,18 +187,30 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
           ),
           SliverList.list(children: [
             if (_bannerAd != null && _isAdLoaded)
-              SafeArea(
-                child: SizedBox(
-                  width: double.infinity,
-                  height: _bannerAd!.size.height.toDouble(),
-                  child: AdWidget(ad: _bannerAd!),
-                ),
+              SizedBox(
+                width: double.infinity,
+                height: _bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd!),
               ),
             const SizedBox(height: 20),
           ]),
           LiveMatchListWidget(
             viewType: isGridView ? ViewType.grid : ViewType.list,
           ),
+          if (_nativeAd != null && _isNativeAdLoaded)
+            SliverList.list(
+              children: [
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
+                    child: SizedBox(
+                      height: 400,
+                      child: AdWidget(ad: _nativeAd!),
+                    ),
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
@@ -213,6 +220,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   void dispose() {
     _linkSubscription?.cancel();
     _bannerAd?.dispose();
+    _nativeAd?.dispose();
     super.dispose();
   }
 }

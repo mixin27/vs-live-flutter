@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:vs_live/src/features/ads_test/ads_test_screen.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_screen.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/highlight_player_screen/highlight_player_screen.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
@@ -39,7 +38,6 @@ enum AppRoute {
   privacyPolicy,
   highlights,
   highlightPlayer,
-  adsTest,
 }
 
 @riverpod
@@ -92,13 +90,6 @@ GoRouter goRouter(Ref ref) {
         name: AppRoute.onboarding.name,
         pageBuilder: (context, state) => const NoTransitionPage(
           child: OnboardingScreen(),
-        ),
-      ),
-      GoRoute(
-        path: '/ads-test',
-        name: AppRoute.adsTest.name,
-        pageBuilder: (context, state) => const NoTransitionPage(
-          child: AdsTestScreen(),
         ),
       ),
       GoRoute(

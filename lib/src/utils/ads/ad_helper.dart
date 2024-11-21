@@ -18,14 +18,17 @@ class AdHelper {
   static NativeAd? _nativeAd;
   static bool _nativeAdLoaded = false;
 
+  static BannerAd? _bannerAd;
+  static bool _bannerAdLoaded = false;
+
   //*****************Interstitial Ad******************
   static void precacheInterstitialAd() {
-    log('Precache Interstitial Ad - Id: ${AppRemoteConfig.interstitialId}');
+    log('Precache Interstitial Ad - Id: ${AppRemoteConfig.interstitialAd}');
 
     if (AppRemoteConfig.hideAds) return;
 
     InterstitialAd.load(
-      adUnitId: AppRemoteConfig.interstitialId,
+      adUnitId: AppRemoteConfig.interstitialAd,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -70,7 +73,7 @@ class AdHelper {
     showLoadingDialog(context);
 
     InterstitialAd.load(
-      adUnitId: AppRemoteConfig.interstitialId,
+      adUnitId: AppRemoteConfig.interstitialAd,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -98,7 +101,7 @@ class AdHelper {
     if (AppRemoteConfig.hideAds) return;
 
     _nativeAd = NativeAd(
-      adUnitId: AppRemoteConfig.nativeId,
+      adUnitId: AppRemoteConfig.nativeAd,
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           log('$NativeAd loaded.');
@@ -112,7 +115,7 @@ class AdHelper {
       request: const AdRequest(),
       // Styling
       nativeTemplateStyle: NativeTemplateStyle(
-        templateType: TemplateType.small,
+        templateType: TemplateType.medium,
       ),
     )..load();
   }
@@ -123,7 +126,9 @@ class AdHelper {
     _nativeAdLoaded = false;
   }
 
-  static NativeAd? loadNativeAd({VoidCallback? onLoaded}) {
+  static NativeAd? loadNativeAd({
+    VoidCallback? onLoaded,
+  }) {
     if (AppRemoteConfig.hideAds) return null;
 
     if (_nativeAdLoaded && _nativeAd != null) {
@@ -132,7 +137,7 @@ class AdHelper {
     }
 
     return NativeAd(
-      adUnitId: AppRemoteConfig.nativeId,
+      adUnitId: AppRemoteConfig.nativeAd,
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           log('$NativeAd loaded.');
@@ -153,6 +158,60 @@ class AdHelper {
     )..load();
   }
 
+  // **************** Banner Ad*******************
+  static void precacheBannerAd() {
+    if (AppRemoteConfig.hideAds) return;
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AppRemoteConfig.bannerAd,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          log('$NativeAd loaded.');
+          _bannerAdLoaded = true;
+        },
+        onAdFailedToLoad: (ad, error) {
+          _resetBannerAd();
+          log('$BannerAd failed to load: $error');
+        },
+      ),
+      request: const AdRequest(),
+    )..load();
+  }
+
+  static void _resetBannerAd() {
+    _bannerAd?.dispose();
+    _bannerAd = null;
+    _bannerAdLoaded = false;
+  }
+
+  static BannerAd? loadBannerAd({VoidCallback? onLoaded}) {
+    if (AppRemoteConfig.hideAds) return null;
+
+    if (_bannerAdLoaded && _bannerAd != null) {
+      onLoaded?.call();
+      return _bannerAd;
+    }
+
+    return BannerAd(
+      size: AdSize.banner,
+      adUnitId: AppRemoteConfig.bannerAd,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          log('$BannerAd loaded.');
+          onLoaded?.call();
+          _resetBannerAd();
+          precacheBannerAd();
+        },
+        onAdFailedToLoad: (ad, error) {
+          _resetBannerAd();
+          log('$BannerAd failed to load: $error');
+        },
+      ),
+      request: const AdRequest(),
+    )..load();
+  }
+
   //*****************Rewarded Ad******************
   static void showRewardedAd(
     BuildContext context, {
@@ -166,7 +225,7 @@ class AdHelper {
     showLoadingDialog(context);
 
     RewardedAd.load(
-      adUnitId: AppRemoteConfig.rewardedId,
+      adUnitId: AppRemoteConfig.rewardedAd,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {

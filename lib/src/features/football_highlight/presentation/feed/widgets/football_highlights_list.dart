@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
+import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
-import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 
 import 'highlight_grid_view.dart';
@@ -44,28 +44,13 @@ class _FootballHighlightsListState
   }
 
   Future<void> loadAd() async {
-    if (AppRemoteConfig.hideAds) return;
-
-    final ad = BannerAd(
-      adUnitId: AppRemoteConfig.bannerId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          debugPrint('$ad loaded.');
-          setState(() {
-            _isAdLoaded = true;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('BannerAd failed to load: $err');
-          // Dispose the ad here to free resources.
-          ad.dispose();
-        },
-      ),
-    )..load();
+    final ad = AdHelper.loadBannerAd(
+      onLoaded: () {
+        setState(() {
+          _isAdLoaded = true;
+        });
+      },
+    );
     setState(() {
       _bannerAd = ad;
     });

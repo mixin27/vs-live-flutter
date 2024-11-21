@@ -8,6 +8,7 @@ import 'package:vs_live/src/providers/app_theme_provider.dart';
 import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/update/presentation/force_update_widget.dart';
 import 'package:vs_live/src/update/utils/force_update_client.dart';
+import 'package:vs_live/src/utils/ads/app_open_ad_widget.dart';
 import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/dialog/show_alert_dialog.dart';
 
@@ -65,7 +66,7 @@ class MyApp extends ConsumerWidget {
           onException: (e, st) {
             log(e.toString());
           },
-          child: child!,
+          child: AppOpenAdWidget(child: child!),
         );
       },
     );
