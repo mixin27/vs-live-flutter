@@ -135,7 +135,10 @@ class _HighlightGridViewState extends ConsumerState<HighlightGridView> {
       itemBuilder: (context, index) {
         final item = widget.highlights[index];
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: EdgeInsets.only(
+            left: index % 2 != 0 ? 0 : 16,
+            right: index % 2 == 0 ? 0 : 16,
+          ),
           child: HighlightGridItem(highlight: item),
         );
       },

@@ -51,6 +51,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   }
 
   void loadBannerAd() {
+    if (AppRemoteConfig.hideAds) return;
+
     final ad = BannerAd(
       adUnitId: AppRemoteConfig.bannerId,
       request: const AdRequest(),

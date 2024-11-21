@@ -44,9 +44,7 @@ class _FootballHighlightsListState
   }
 
   Future<void> loadAd() async {
-    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    // final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-    //     MediaQuery.sizeOf(context).width.truncate());
+    if (AppRemoteConfig.hideAds) return;
 
     final ad = BannerAd(
       adUnitId: AppRemoteConfig.bannerId,
