@@ -40,7 +40,7 @@ class MyApp extends ConsumerWidget {
             },
             iosAppStoreId: '',
           ),
-          allowCancel: false,
+          allowCancel: !AppRemoteConfig.forceUpdate,
           showForceUpdateAlert: (context, allowCancel) {
             log("show update dialog");
             return showAlertDialog(
