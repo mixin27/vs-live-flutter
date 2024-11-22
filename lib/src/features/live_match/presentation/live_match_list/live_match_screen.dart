@@ -260,7 +260,6 @@ class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
   @override
   void dispose() {
     _searchController.dispose();
-
     super.dispose();
   }
 }

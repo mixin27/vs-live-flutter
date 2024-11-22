@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -131,10 +133,10 @@ class AdHelper {
   }) {
     if (AppRemoteConfig.hideAds) return null;
 
-    if (_nativeAdLoaded && _nativeAd != null) {
-      onLoaded?.call();
-      return _nativeAd;
-    }
+    // if (_nativeAdLoaded && _nativeAd != null) {
+    //   onLoaded?.call();
+    //   return _nativeAd;
+    // }
 
     return NativeAd(
       adUnitId: AppRemoteConfig.nativeAd,
@@ -142,11 +144,11 @@ class AdHelper {
         onAdLoaded: (ad) {
           log('$NativeAd loaded.');
           onLoaded?.call();
-          _resetNativeAd();
-          precacheNativeAd();
+          // _resetNativeAd();
+          // precacheNativeAd();
         },
         onAdFailedToLoad: (ad, error) {
-          _resetNativeAd();
+          // _resetNativeAd();
           log('$NativeAd failed to load: $error');
         },
       ),
@@ -188,10 +190,10 @@ class AdHelper {
   static BannerAd? loadBannerAd({VoidCallback? onLoaded}) {
     if (AppRemoteConfig.hideAds) return null;
 
-    if (_bannerAdLoaded && _bannerAd != null) {
-      onLoaded?.call();
-      return _bannerAd;
-    }
+    // if (_bannerAdLoaded && _bannerAd != null) {
+    //   onLoaded?.call();
+    //   return _bannerAd;
+    // }
 
     return BannerAd(
       size: AdSize.banner,
@@ -200,11 +202,11 @@ class AdHelper {
         onAdLoaded: (ad) {
           log('$BannerAd loaded.');
           onLoaded?.call();
-          _resetBannerAd();
-          precacheBannerAd();
+          // _resetBannerAd();
+          // precacheBannerAd();
         },
         onAdFailedToLoad: (ad, error) {
-          _resetBannerAd();
+          // _resetBannerAd();
           log('$BannerAd failed to load: $error');
         },
       ),

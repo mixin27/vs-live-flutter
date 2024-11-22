@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
-import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 
@@ -33,34 +31,6 @@ class FootballHighlightsList extends ConsumerStatefulWidget {
 class _FootballHighlightsListState
     extends ConsumerState<FootballHighlightsList> {
   List<FootballHighlight> _highlights = List.empty();
-
-  BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    loadAd();
-  }
-
-  Future<void> loadAd() async {
-    final ad = AdHelper.loadBannerAd(
-      onLoaded: () {
-        setState(() {
-          _isAdLoaded = true;
-        });
-      },
-    );
-    setState(() {
-      _bannerAd = ad;
-    });
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,15 +90,6 @@ class _FootballHighlightsListState
                       ref.refresh(getAllHighlightsFeedProvider.future),
                   child: Text("Try again".hardcoded),
                 ),
-                gapH12,
-                if (_bannerAd != null && _isAdLoaded)
-                  SafeArea(
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: _bannerAd!.size.height.toDouble(),
-                      child: AdWidget(ad: _bannerAd!),
-                    ),
-                  ),
               ],
             ),
           ),
@@ -165,15 +126,6 @@ class _FootballHighlightsListState
                         ref.refresh(getAllHighlightsFeedProvider.future),
                     child: Text("Refresh".hardcoded),
                   ),
-                  gapH12,
-                  if (_bannerAd != null && _isAdLoaded)
-                    SafeArea(
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
                 ],
               ),
             ),

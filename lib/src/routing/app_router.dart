@@ -118,6 +118,16 @@ GoRouter goRouter(Ref ref) {
           );
         },
       ),
+      GoRoute(
+        path: '/live-detail',
+        name: AppRoute.liveMatchDetail.name,
+        pageBuilder: (context, state) {
+          LiveMatch match = state.extra as LiveMatch;
+          return NoTransitionPage(
+            child: LiveMatchDetailScreen(match: match),
+          );
+        },
+      ),
       StatefulShellRoute.indexedStack(
         pageBuilder: (context, state, navigationShell) => NoTransitionPage(
           child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
@@ -132,18 +142,6 @@ GoRouter goRouter(Ref ref) {
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: LiveMatchScreen(),
                 ),
-                routes: [
-                  GoRoute(
-                    path: 'detail',
-                    name: AppRoute.liveMatchDetail.name,
-                    pageBuilder: (context, state) {
-                      LiveMatch match = state.extra as LiveMatch;
-                      return NoTransitionPage(
-                        child: LiveMatchDetailScreen(match: match),
-                      );
-                    },
-                  ),
-                ],
               ),
             ],
           ),

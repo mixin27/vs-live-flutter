@@ -72,6 +72,13 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
   }
 
   @override
+  void dispose() {
+    _bannerAd?.dispose();
+    _nativeAd?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final links = widget.match.links;
     final dateStr = Format.parseAndFormatMatchDateTime(
@@ -168,9 +175,9 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
             ),
           if (links.isNotEmpty) LiveLinkList(links: links),
           if (links.isEmpty) emptyWidget,
-          SliverList.list(
-            children: [
-              if (_nativeAd != null && _isNativeAdLoaded)
+          if (_nativeAd != null && _isNativeAdLoaded)
+            SliverList.list(
+              children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: Sizes.p16,
@@ -181,8 +188,8 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
                     child: AdWidget(ad: _nativeAd!),
                   ),
                 )
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );

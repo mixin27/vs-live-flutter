@@ -2,12 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/routing/app_router.dart';
-import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/widgets/glassmorphism/glassmorphism.dart';
 
@@ -21,63 +19,34 @@ class HighlightListView extends ConsumerStatefulWidget {
 }
 
 class _HighlightListViewState extends ConsumerState<HighlightListView> {
-  BannerAd? _bannerAd;
-  bool _isLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    loadAd();
-  }
-
-  void loadAd() async {
-    final ad = AdHelper.loadBannerAd(
-      onLoaded: () {
-        setState(() {
-          _isLoaded = true;
-        });
-      },
-    );
-    setState(() {
-      _bannerAd = ad;
-    });
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final List<Widget> items = [];
+    // final List<Widget> items = [];
 
-    for (int i = 0; i < widget.highlights.length; i++) {
-      // Add a regular item
-      items.add(HighlightListItem(highlight: widget.highlights[i]));
+    // for (int i = 0; i < widget.highlights.length; i++) {
+    //   // Add a regular item
+    //   items.add(HighlightListItem(highlight: widget.highlights[i]));
 
-      // Insert an ad after every 5th item
-      if ((i + 1) % 5 == 0 && _bannerAd != null) {
-        items.add(
-          _bannerAd != null && _isLoaded
-              ? SafeArea(
-                  child: SizedBox(
-                    width: _bannerAd!.size.width.toDouble(),
-                    height: _bannerAd!.size.height.toDouble(),
-                    child: AdWidget(ad: _bannerAd!),
-                  ),
-                )
-              : const SizedBox(),
-        );
-      }
-    }
+    //   // Insert an ad after every 5th item
+    //   if ((i + 1) % 5 == 0 && _bannerAd != null) {
+    //     items.add(
+    //       _bannerAd != null && _isLoaded
+    //           ? SafeArea(
+    //               child: SizedBox(
+    //                 width: _bannerAd!.size.width.toDouble(),
+    //                 height: _bannerAd!.size.height.toDouble(),
+    //                 child: AdWidget(ad: _bannerAd!),
+    //               ),
+    //             )
+    //           : const SizedBox(),
+    //     );
+    //   }
+    // }
 
     return SliverList.builder(
-      itemCount: items.length,
+      itemCount: widget.highlights.length,
       itemBuilder: (context, index) {
-        return items[index];
+        return HighlightListItem(highlight: widget.highlights[index]);
       },
     );
   }

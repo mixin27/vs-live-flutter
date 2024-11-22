@@ -166,7 +166,7 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
                     vertical: Sizes.p16,
                   ),
                   child: SizedBox(
-                    height: 150,
+                    height: 400,
                     child: AdWidget(ad: _nativeAd!),
                   ),
                 ),

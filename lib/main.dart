@@ -56,18 +56,18 @@ void registerErrorHandlers(ErrorLogger errorLogger) {
     errorLogger.logError(details.exception, details.stack);
 
     // Crashlytics report will be here if needed
-    // if (kReleaseMode) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-    // }
+    if (kReleaseMode) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    }
   };
   // * Handle errors from the underlying platform/OS
   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
     errorLogger.logError(error, stack);
 
     // Crashlytics report will be here if needed
-    // if (kReleaseMode) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    // }
+    if (kReleaseMode) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    }
     return true;
   };
   // * Show some error UI when any widget in the app fails to build
