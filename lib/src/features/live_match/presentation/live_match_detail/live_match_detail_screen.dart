@@ -10,6 +10,7 @@ import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
+import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
@@ -43,8 +44,16 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
     );
     super.initState();
 
-    loadNativeAd();
-    loadBannerAd();
+    if (!AppRemoteConfig.hideAdsInMatchDetail) {
+      final pageAdsInfo = AppRemoteConfig.liveMatchDetailAdsInfo;
+      if (pageAdsInfo.native) {
+        loadNativeAd();
+      }
+
+      if (pageAdsInfo.banner) {
+        loadBannerAd();
+      }
+    }
   }
 
   void loadNativeAd() {

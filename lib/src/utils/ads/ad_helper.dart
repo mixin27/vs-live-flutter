@@ -100,7 +100,7 @@ class AdHelper {
 
   //*****************Native Ad******************
   static void precacheNativeAd() {
-    if (AppRemoteConfig.hideAds) return;
+    if (AppRemoteConfig.hideAds || AppRemoteConfig.hideNativeAd) return;
 
     _nativeAd = NativeAd(
       adUnitId: AppRemoteConfig.nativeAd,
@@ -131,7 +131,7 @@ class AdHelper {
   static NativeAd? loadNativeAd({
     VoidCallback? onLoaded,
   }) {
-    if (AppRemoteConfig.hideAds) return null;
+    if (AppRemoteConfig.hideAds || AppRemoteConfig.hideNativeAd) return null;
 
     // if (_nativeAdLoaded && _nativeAd != null) {
     //   onLoaded?.call();
@@ -162,7 +162,7 @@ class AdHelper {
 
   // **************** Banner Ad*******************
   static void precacheBannerAd() {
-    if (AppRemoteConfig.hideAds) return;
+    if (AppRemoteConfig.hideAds || AppRemoteConfig.hideBannerAd) return;
 
     _bannerAd = BannerAd(
       size: AdSize.banner,
@@ -188,7 +188,7 @@ class AdHelper {
   }
 
   static BannerAd? loadBannerAd({VoidCallback? onLoaded}) {
-    if (AppRemoteConfig.hideAds) return null;
+    if (AppRemoteConfig.hideAds || AppRemoteConfig.hideBannerAd) return null;
 
     // if (_bannerAdLoaded && _bannerAd != null) {
     //   onLoaded?.call();
@@ -219,7 +219,7 @@ class AdHelper {
     BuildContext context, {
     required VoidCallback onComplete,
   }) {
-    if (AppRemoteConfig.hideAds) {
+    if (AppRemoteConfig.hideAds || AppRemoteConfig.hideRewardedAd) {
       onComplete();
       return;
     }
@@ -252,6 +252,8 @@ class AdHelper {
   // ****************** Consent ****************************
   static showConsentUMP() {
     log("showConsentUMP called");
+    if (AppRemoteConfig.hideAds) return;
+
     final params = ConsentRequestParameters();
     ConsentInformation.instance.requestConsentInfoUpdate(
       params,

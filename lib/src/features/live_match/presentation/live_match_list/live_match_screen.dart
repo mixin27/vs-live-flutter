@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,7 @@ import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/onesignal/onesignal.dart';
+import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
 import 'widgets/live_match_list_widget.dart';
@@ -46,8 +48,17 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
     initOnesignal();
     initDeepLinks();
 
-    loadBannerAd();
-    loadNativeAd();
+    if (!AppRemoteConfig.hideAdsInMatchList) {
+      final pageAdsInfo = AppRemoteConfig.liveMatchListAdsInfo;
+
+      if (pageAdsInfo.banner) {
+        loadBannerAd();
+      }
+
+      if (pageAdsInfo.native) {
+        loadNativeAd();
+      }
+    }
   }
 
   void loadBannerAd() {
@@ -77,15 +88,44 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   Future<void> initDeepLinks() async {
     _appLinks = AppLinks();
 
-    // Handle links
-    _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
-      debugPrint('onAppLink: $uri');
-      openAppLink(uri);
-    });
+    try {
+      // Handle links
+      _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
+        debugPrint('onAppLink: $uri');
+        openAppLink(uri);
+      });
+    } catch (e) {
+      log('[initDeepLinks] Error: ${e.toString()}');
+    }
   }
 
   void openAppLink(Uri uri) {
-    context.go('/home');
+    if (uri.scheme == 'bsl') {
+      if (uri.host == 'open.bsl.app') {
+        log('Handle bsl://open.bsl.app');
+        // Navigate to a specific page
+      } else if (uri.host == 'kyawzayartun.com') {
+        log('Handle bsl://kyawzayartun.com');
+        // Navigate to another page
+      }
+    } else if (uri.scheme == 'https' && uri.host == 'kyawzayartun.com') {
+      if (uri.path == '/bsl') {
+        log('Handle https://kyawzayartun.com/bsl');
+        // Navigate to another page
+      }
+    } else if (uri.scheme == 'https' && uri.host == 'www.kyawzayartun.com') {
+      if (uri.path == '/bsl') {
+        log('Handle https://www.kyawzayartun.com/bsl');
+        // Navigate to another page
+      }
+    }
+
+    if (uri.queryParameters.containsKey('id')) {
+      String appId = uri.queryParameters['id']!;
+      log('App ID: $appId');
+    }
+
+    context.goNamed(AppRoute.home.name);
   }
 
   @override

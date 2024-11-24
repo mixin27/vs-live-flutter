@@ -42,6 +42,8 @@ class AppOpenAdManager {
   }
 
   void showAdIfAvailable() {
+    if (AppRemoteConfig.hideAds || AppRemoteConfig.hideAppOpenAd) return;
+
     if (!isAdAvailable) {
       log('Tried to show ad before available.');
       loadAd();

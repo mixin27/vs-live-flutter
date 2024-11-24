@@ -22,6 +22,13 @@ class UnknownException extends AppException {
         );
 }
 
+class ConnectionException extends AppException {
+  ConnectionException([String? code, String? message])
+      : super(
+          message ?? 'No internet connection.',
+        );
+}
+
 class ServerException extends AppException {
   ServerException({
     required String code,

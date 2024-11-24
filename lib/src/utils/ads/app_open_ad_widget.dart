@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vs_live/src/utils/ads/ad_helper.dart';
+import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 
 import 'app_life_cycle_reactor.dart';
 import 'app_open_ad_manager.dart';
@@ -21,6 +22,8 @@ class _AppOpenAdWidgetState extends State<AppOpenAdWidget> {
   void initState() {
     super.initState();
     AdHelper.showConsentUMP();
+
+    if (AppRemoteConfig.hideAds) return;
 
     _appOpenAdManager.loadAd(onAdLoaded: () {
       _appOpenAdManager.showAdIfAvailable();

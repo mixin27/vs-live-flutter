@@ -15,14 +15,38 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-### Deep links and app links sample
+### Test Deep Links
 
-Deep link
+Test `bsl://open.bsl.app:`
+
+Use ADB to simulate the custom schema:
 
 ```bash
-adb shell am start -a android.intent.action.VIEW -d "mix://open.bsl.app/highlights"
+adb shell am start -a android.intent.action.VIEW -d "bsl://open.bsl.app" com.billion.sport_live
 ```
 
-App link
+Test `bls://kyawzayartun.com:`
 
-[http://kyawzayartun.com/bsl](http://kyawzayartun.com/bsl)
+Use ADB for the HTTPS link:
+
+```bash
+adb shell am start -a android.intent.action.VIEW -d "bsl://kyawzayartun.com" com.billion.sport_live
+```
+
+```bash
+adb shell am start -a android.intent.action.VIEW -d "https://play.google.com/store/apps/details?id=com.billion.sport_live" com.billion.sport_live
+```
+
+### Test App Links
+
+**Test with ADB:**
+
+Run the following command to test:
+
+```bash
+adb shell am start -a android.intent.action.VIEW -d "https://www.kyawzayartun.com/bsl" com.billion.sport_live
+```
+
+```bash
+adb shell am start -a android.intent.action.VIEW -d "https://kyawzayartun.com/bsl" com.billion.sport_live
+```

@@ -13,6 +13,7 @@ import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
+import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 
 class HighlightFeedScreen extends StatefulWidget {
@@ -38,8 +39,17 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
       screenName: 'HighlightFeedScreen',
     );
     super.initState();
-    loadBannerAd();
-    loadNativeAd();
+
+    if (!AppRemoteConfig.hideAdsInHighlightList) {
+      final pageAdsInfo = AppRemoteConfig.highlightListAdsInfo;
+      if (pageAdsInfo.native) {
+        loadNativeAd();
+      }
+
+      if (pageAdsInfo.banner) {
+        loadBannerAd();
+      }
+    }
   }
 
   Future<void> loadBannerAd() async {

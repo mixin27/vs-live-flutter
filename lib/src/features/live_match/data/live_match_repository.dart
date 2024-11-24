@@ -51,6 +51,13 @@ class LiveMatchRepository {
           message: result.message,
         );
       }
+    } on DioException catch (error) {
+      if (error.type == DioExceptionType.connectionError ||
+          error.type == DioExceptionType.connectionError) {
+        throw ConnectionException(null, error.message);
+      } else {
+        throw UnknownException(null, error.message);
+      }
     } catch (error) {
       developer.log("[fetchLiveMatches]: $error");
       rethrow;
