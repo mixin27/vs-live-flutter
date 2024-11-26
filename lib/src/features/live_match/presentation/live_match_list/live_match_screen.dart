@@ -17,6 +17,7 @@ import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/onesignal/onesignal.dart';
 import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
+import 'package:wiredash/wiredash.dart';
 
 import 'widgets/live_match_list_widget.dart';
 
@@ -133,6 +134,12 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
     final isGridView = _selectedView == 0;
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Wiredash.of(context).show(inheritMaterialTheme: true);
+        },
+        child: const Icon(Icons.feedback_outlined),
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
