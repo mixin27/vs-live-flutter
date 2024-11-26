@@ -13,6 +13,7 @@ import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
+import 'package:wiredash/wiredash.dart';
 
 class LiveMatchDetailScreen extends ConsumerStatefulWidget {
   const LiveMatchDetailScreen({
@@ -128,6 +129,12 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
     );
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Wiredash.of(context).show(inheritMaterialTheme: true);
+        },
+        child: const Icon(Icons.feedback_outlined),
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),

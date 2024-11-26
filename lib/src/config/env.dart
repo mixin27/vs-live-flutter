@@ -15,4 +15,10 @@ abstract class Env {
 
   @EnviedField(varName: 'HIGHLIGHT_API_KEY', obfuscate: true)
   static final String highlightApiKey = _Env.highlightApiKey;
+
+  @EnviedField(varName: 'WIREDASH_PROJECT_ID', obfuscate: true)
+  static final String wiredashProjectId = _Env.wiredashProjectId;
+
+  @EnviedField(varName: 'WIREDASH_SECRET', obfuscate: true)
+  static final String wiredashSecret = _Env.wiredashSecret;
 }

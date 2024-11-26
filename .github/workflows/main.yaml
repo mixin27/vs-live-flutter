@@ -71,6 +71,8 @@ jobs:
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
           echo "ONESIGNAL_APP_ID=${{ secrets.ONESIGNAL_APP_ID }}" >> .env
           echo "HIGHLIGHT_API_KEY=${{ secrets.HIGHLIGHT_API_KEY }}" >> .env
+          echo "WIREDASH_PROJECT_ID=${{ secrets.WIREDASH_PROJECT_ID }}" >> .env
+          echo "WIREDASH_SECRET=${{ secrets.WIREDASH_SECRET }}" >> .env
           cat .env
 
       - name: 🔨 Run code generation
