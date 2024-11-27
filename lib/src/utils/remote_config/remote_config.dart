@@ -4,13 +4,14 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vs_live/src/config/env.dart';
 
 const _isDebug = kDebugMode || kProfileMode;
 
 class AppRemoteConfig {
   static final _config = FirebaseRemoteConfig.instance;
 
-  static const _defaultValues = {
+  static final _defaultValues = {
     "live_match_list_page":
         "{     \"native\": true,     \"banner\": true,     \"interstitial\": true,     \"rewarded\": true }",
     "live_match_detail_page":
@@ -31,9 +32,13 @@ class AppRemoteConfig {
     "show_ads_in_match_list": true,
     "show_ads_in_match_detail": true,
     "show_ads_in_highlight_list": true,
-    "latest_build": 10,
+    "show_app_open_listener": true,
     "latest_version": "1.0.9",
-    "force_update": true
+    "force_update": true,
+    "update_title": "App Update Required",
+    "update_description": "Please update to continue using the app.",
+    "api_url": Env.baseUrl,
+    "api_key": "blablabla",
   };
 
   static Future<void> initConfig() async {
@@ -46,13 +51,21 @@ class AppRemoteConfig {
 
     await _config.setDefaults(_defaultValues);
     await _config.fetchAndActivate();
-    log('remoteConfigData: ${_config.getBool("show_ads")}');
+
+    log('remoteConfigData: ${_config.getBool("api_url")}');
 
     _config.onConfigUpdated.listen((event) async {
       await _config.activate();
       log('updated: ${_config.getBool("show_ads")}');
     });
   }
+
+  static String get updateTitle => _config.getString("update_title");
+  static String get updateDescription =>
+      _config.getString("update_description");
+
+  static String get apiUrl => _config.getString("api_url");
+  static String get apiKey => _config.getString("api_key");
 
   static bool get _showAds => _config.getBool('show_ads');
   static bool get hideAds => !_showAds;
@@ -77,6 +90,10 @@ class AppRemoteConfig {
       PageAdsInfo.fromJson(_highlightListPage);
 
   // show/hide for specific page
+  static bool get _showAppOpenAdListener =>
+      _config.getBool('show_app_open_listener');
+  static bool get hideAppOpenAdListener => !_showAppOpenAdListener;
+
   static bool get _showAdsInMatchList =>
       _config.getBool("show_ads_in_match_list");
   static bool get hideAdsInMatchList => !_showAdsInMatchList;
@@ -128,7 +145,6 @@ class AppRemoteConfig {
       _isDebug ? "ca-app-pub-3940256099942544/9257395921" : _appOpenAd;
 
   // app update
-  static int get latestBuildNumber => _config.getInt('latest_build');
   static String get latestVersion => _config.getString('latest_version');
   static bool get forceUpdate => _config.getBool('force_update');
 }

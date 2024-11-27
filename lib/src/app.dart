@@ -60,8 +60,8 @@ class MyApp extends ConsumerWidget {
               log("show update dialog");
               return showAlertDialog(
                 context: context,
-                title: 'App Update Required',
-                content: 'Please update to continue using the app.',
+                title: AppRemoteConfig.updateTitle,
+                content: AppRemoteConfig.updateDescription,
                 cancelActionText: allowCancel ? 'Later' : null,
                 defaultActionText: 'Update Now',
               );

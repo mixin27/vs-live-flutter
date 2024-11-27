@@ -28,10 +28,13 @@ class _AppOpenAdWidgetState extends State<AppOpenAdWidget> {
     _appOpenAdManager.loadAd(onAdLoaded: () {
       _appOpenAdManager.showAdIfAvailable();
     });
-    _appLifecycleReactor = AppLifecycleReactor(
-      appOpenAdManager: _appOpenAdManager,
-    );
-    _appLifecycleReactor.listenToAppStateChanges();
+
+    if (!AppRemoteConfig.hideAppOpenAdListener) {
+      _appLifecycleReactor = AppLifecycleReactor(
+        appOpenAdManager: _appOpenAdManager,
+      );
+      _appLifecycleReactor.listenToAppStateChanges();
+    }
   }
 
   @override

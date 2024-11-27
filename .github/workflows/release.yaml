@@ -77,7 +77,7 @@ jobs:
         run: |
             touch .env
             echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
-            echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+            # echo "API_KEY=${{ secrets.API_KEY }}" >> .env
             echo "ONESIGNAL_APP_ID=${{ secrets.ONESIGNAL_APP_ID }}" >> .env
             echo "HIGHLIGHT_API_KEY=${{ secrets.HIGHLIGHT_API_KEY }}" >> .env
             echo "WIREDASH_PROJECT_ID=${{ secrets.WIREDASH_PROJECT_ID }}" >> .env
