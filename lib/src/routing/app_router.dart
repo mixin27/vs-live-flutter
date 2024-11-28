@@ -128,6 +128,13 @@ GoRouter goRouter(Ref ref) {
           );
         },
       ),
+      GoRoute(
+        path: '/privacy-policy',
+        name: AppRoute.privacyPolicy.name,
+        pageBuilder: (context, state) => const NoTransitionPage(
+          child: PrivacyPolicyPage(),
+        ),
+      ),
       StatefulShellRoute.indexedStack(
         pageBuilder: (context, state, navigationShell) => NoTransitionPage(
           child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
@@ -166,15 +173,6 @@ GoRouter goRouter(Ref ref) {
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: SettingsScreen(),
                 ),
-                routes: [
-                  GoRoute(
-                    path: 'privacy-policy',
-                    name: AppRoute.privacyPolicy.name,
-                    pageBuilder: (context, state) => const NoTransitionPage(
-                      child: PrivacyPolicyPage(),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),

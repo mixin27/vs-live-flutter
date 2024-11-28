@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/providers/app_theme_provider.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
@@ -16,7 +17,7 @@ class ThemeModeSwitchTile extends HookConsumerWidget {
 
     void changeTheme(ThemeMode mode) {
       ref.read(appThemeModeProvider.notifier).setThemeMode(mode);
-      Navigator.of(context).pop();
+      context.pop();
     }
 
     void handleTap() {
