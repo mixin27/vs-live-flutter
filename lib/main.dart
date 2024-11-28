@@ -9,12 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vs_live/firebase_options.dart';
 import 'package:vs_live/src/errors/async_error_logger.dart';
 import 'package:vs_live/src/errors/error_logger.dart';
+import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 
 import 'src/app.dart';
 import 'src/config/constants/app_sizes.dart';
-import 'src/utils/ads/ad_helper.dart';
-import 'src/utils/remote_config/remote_config.dart';
 
 late SharedPreferences sharedPreferences;
 
@@ -26,7 +25,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await AppRemoteConfig.initConfig();
+
   await AdHelper.initAds();
 
   // turn off the # in the URLs on the web

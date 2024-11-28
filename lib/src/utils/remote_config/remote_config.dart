@@ -52,7 +52,7 @@ class AppRemoteConfig {
     await _config.setDefaults(_defaultValues);
     await _config.fetchAndActivate();
 
-    log('remoteConfigData: ${_config.getBool("api_url")}');
+    log('remoteConfigData: ${_config.getString("api_url")}');
 
     _config.onConfigUpdated.listen((event) async {
       await _config.activate();

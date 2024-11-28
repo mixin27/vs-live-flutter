@@ -20,7 +20,9 @@ class _AppOpenAdWidgetState extends State<AppOpenAdWidget> {
 
   @override
   void initState() {
+    _init();
     super.initState();
+
     AdHelper.showConsentUMP();
 
     if (AppRemoteConfig.hideAds) return;
@@ -35,6 +37,10 @@ class _AppOpenAdWidgetState extends State<AppOpenAdWidget> {
       );
       _appLifecycleReactor.listenToAppStateChanges();
     }
+  }
+
+  void _init() async {
+    await AppRemoteConfig.initConfig();
   }
 
   @override
