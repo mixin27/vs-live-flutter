@@ -60,7 +60,7 @@
                     android:host="kyawzayartun.com" />
             </intent-filter>
 
-            <intent-filter>
+            <!-- <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -70,7 +70,7 @@
                     android:scheme="https"
                     android:host="play.google.com"
                     android:pathPrefix="/store/apps/details" />
-            </intent-filter>
+            </intent-filter> -->
             <!-- Deep Link -->
 
             <!-- App Link -->
