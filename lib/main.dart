@@ -14,6 +14,7 @@ import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 
 import 'src/app.dart';
 import 'src/config/constants/app_sizes.dart';
+import 'src/utils/remote_config/remote_config.dart';
 
 late SharedPreferences sharedPreferences;
 
@@ -26,6 +27,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await AppRemoteConfig.initConfig();
   await AdHelper.initAds();
 
   // turn off the # in the URLs on the web

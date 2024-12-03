@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:vs_live/src/utils/remote_config/remote_config.dart';
+import 'package:vs_live/src/config/env.dart';
 
 class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final apiKey = AppRemoteConfig.apiKey;
+    final apiKey = Env.apiKey.replaceAll('\\', '');
 
     if (apiKey.isNotEmpty) {
       if (!options.headers.containsKey(HttpHeaders.authorizationHeader)) {

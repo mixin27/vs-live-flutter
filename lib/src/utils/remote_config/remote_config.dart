@@ -64,8 +64,8 @@ class AppRemoteConfig {
   static String get updateDescription =>
       _config.getString("update_description");
 
-  static String get apiUrl => _config.getString("api_url");
-  static String get apiKey => _config.getString("api_key");
+  // static String get apiUrl => _config.getString("api_url");
+  // static String get apiKey => _config.getString("api_key");
 
   static bool get _showAds => _config.getBool('show_ads');
   static bool get hideAds => !_showAds;

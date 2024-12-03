@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/config/env.dart';
 import 'package:vs_live/src/utils/dio_client/app_interceptor.dart';
 import 'package:vs_live/src/utils/dio_client/auth_interceptor.dart';
-import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 
 part 'dio_client.g.dart';
 
@@ -24,8 +23,7 @@ class DioClient {
   }
 
   Dio _createDioClient() {
-    final baseUrl =
-        AppRemoteConfig.apiUrl.isEmpty ? Env.baseUrl : AppRemoteConfig.apiUrl;
+    final baseUrl = Env.baseUrl;
     final dio = Dio()
       ..options = BaseOptions(
         baseUrl: baseUrl,
@@ -51,8 +49,7 @@ class DioClient {
 
 @riverpod
 Dio defaultDioClient(Ref ref) {
-  final baseUrl =
-      AppRemoteConfig.apiUrl.isEmpty ? Env.baseUrl : AppRemoteConfig.apiUrl;
+  final baseUrl = Env.baseUrl;
   final dio = Dio()
     ..options = BaseOptions(
       baseUrl: baseUrl,
