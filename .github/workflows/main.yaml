@@ -46,7 +46,7 @@ jobs:
         id: google_services
         uses: timheuer/base64-to-file@v1.2
         with:
-          fileName: 'google-services.json'
+          fileName: "google-services.json"
           encodedString: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Create google-services.json
@@ -57,7 +57,7 @@ jobs:
         id: firebase_options
         uses: timheuer/base64-to-file@v1.2
         with:
-          fileName: 'firebase_options.dart'
+          fileName: "firebase_options.dart"
           encodedString: ${{ secrets.FIREBASE_OPTION_DART }}
 
       - name: Create firebase_options.dart
@@ -68,7 +68,7 @@ jobs:
         run: |
           touch .env
           echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
-          # echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
           echo "ONESIGNAL_APP_ID=${{ secrets.ONESIGNAL_APP_ID }}" >> .env
           echo "HIGHLIGHT_API_KEY=${{ secrets.HIGHLIGHT_API_KEY }}" >> .env
           echo "WIREDASH_PROJECT_ID=${{ secrets.WIREDASH_PROJECT_ID }}" >> .env
