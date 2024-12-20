@@ -82,8 +82,8 @@ class HighlightListItem extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.08),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.08),
             ],
             stops: const [0.1, 1],
           ),
@@ -91,8 +91,8 @@ class HighlightListItem extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5),
             ],
           ),
           child: Column(
@@ -122,7 +122,7 @@ class HighlightListItem extends ConsumerWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.7),
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                 ),

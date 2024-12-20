@@ -122,6 +122,7 @@ GoRouter goRouter(Ref ref) {
         path: '/live-detail',
         name: AppRoute.liveMatchDetail.name,
         pageBuilder: (context, state) {
+          // todo(me): fix `type 'Null' is not a subtype of type 'LiveMatch' in type cast.`
           LiveMatch match = state.extra as LiveMatch;
           return NoTransitionPage(
             child: LiveMatchDetailScreen(match: match),

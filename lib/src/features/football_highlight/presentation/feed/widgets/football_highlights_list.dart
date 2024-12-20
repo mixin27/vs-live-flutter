@@ -118,7 +118,7 @@ class _FootballHighlightsListState
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7)),
+                            .withValues(alpha: 0.7)),
                   ),
                   const SizedBox(height: Sizes.p16),
                   FilledButton(
