@@ -10,8 +10,8 @@ import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 
 class AdHelper {
   // for initializing ads sdk
-  static Future<void> initAds() async {
-    await MobileAds.instance.initialize();
+  static Future initAds() async {
+    return MobileAds.instance.initialize();
   }
 
   static InterstitialAd? _interstitialAd;
