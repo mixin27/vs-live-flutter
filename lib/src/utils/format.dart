@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 
+DateTime now() => DateTime.now();
+
 class Format {
   static String format(
     DateTime date, {
@@ -58,5 +60,11 @@ class Format {
   static String parseAndFormatMatchDateTime(String date, String time) {
     final parsedDate = parseMatchDateTime(date, time);
     return matchDateAndTime(parsedDate);
+  }
+
+  static DateTime parseSocoMatchTime(String matchTime) {
+    final value = int.tryParse(matchTime) ?? 0;
+    final dt = DateTime.fromMillisecondsSinceEpoch(value * 1000);
+    return dt;
   }
 }

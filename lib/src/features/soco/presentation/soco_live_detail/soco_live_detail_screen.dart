@@ -3,10 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
-import 'package:vs_live/src/features/live_match/domain/live_match.dart';
-import 'package:vs_live/src/features/live_match/presentation/widgets/match_info_widget.dart';
+import 'package:vs_live/src/features/soco/domain/soco_models.dart';
 import 'package:vs_live/src/routing/app_router.dart';
 import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
@@ -14,24 +12,20 @@ import 'package:vs_live/src/utils/format.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
+import 'package:vs_live/src/widgets/text/animated_live_text.dart';
+import 'package:vs_live/src/widgets/text/animated_text.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
-class LiveMatchDetailScreen extends ConsumerStatefulWidget {
-  const LiveMatchDetailScreen({
-    super.key,
-    required this.match,
-  });
+class SocoLiveDetailScreen extends StatefulWidget {
+  const SocoLiveDetailScreen({super.key, required this.match});
 
-  final LiveMatch match;
+  final SocoLiveMatch match;
 
   @override
-  ConsumerState<LiveMatchDetailScreen> createState() =>
-      _LiveMatchDetailScreenState();
+  State<SocoLiveDetailScreen> createState() => _SocoLiveDetailScreenState();
 }
 
-class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
-  late Widget videoWidget;
-
+class _SocoLiveDetailScreenState extends State<SocoLiveDetailScreen> {
   NativeAd? _nativeAd;
   bool _isNativeAdLoaded = false;
 
@@ -42,7 +36,7 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
   void initState() {
     // Record a visit to this page.
     AnalyticsUtil.logScreenView(
-      screenName: 'LiveMatchDetailScreen',
+      screenName: 'SocoLiveDetailScreen',
     );
     super.initState();
 
@@ -91,12 +85,6 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final links = widget.match.links;
-    final dateStr = Format.parseAndFormatMatchDateTime(
-      widget.match.startedDate,
-      widget.match.startedTime,
-    );
-
     final emptyWidget = SliverList.list(
       children: [
         Padding(
@@ -141,51 +129,23 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
             pinned: true,
             bottom: AppBar(
               automaticallyImplyLeading: false,
-              toolbarHeight: 150,
+              toolbarHeight: 200,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: widget.match.league.logo,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                  Text(
+                    widget.match.leaguename,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
-                        placeholder: (context, url) =>
-                            const CupertinoActivityIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.broken_image_outlined),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          widget.match.league.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                        ),
-                      ),
-                    ],
                   ),
                   const SizedBox(height: Sizes.p16),
-                  MatchInfoWidget(
-                    match: widget.match,
-                    logoSize: 60,
-                  ),
+                  SocoLiveMatchInfoWidget(match: widget.match),
                   const SizedBox(height: Sizes.p16),
                   Text(
-                    dateStr,
+                    Format.format(
+                      Format.parseSocoMatchTime(widget.match.matchTime),
+                    ),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: Theme.of(context).colorScheme.secondary),
@@ -211,8 +171,9 @@ class _LiveMatchDetailScreenState extends ConsumerState<LiveMatchDetailScreen> {
                 child: AdWidget(ad: _bannerAd!),
               ),
             ),
-          if (links.isNotEmpty) LiveLinkList(links: links),
-          if (links.isEmpty) emptyWidget,
+          if (widget.match.servers.isNotEmpty)
+            LiveLinkList(links: widget.match.servers),
+          if (widget.match.servers.isEmpty) emptyWidget,
           if (_nativeAd != null && _isNativeAdLoaded)
             SliverList.list(
               children: [
@@ -240,7 +201,7 @@ class LiveLinkList extends StatelessWidget {
     required this.links,
   });
 
-  final List<LiveLink> links;
+  final List<SocoLiveServer> links;
 
   @override
   Widget build(BuildContext context) {
@@ -253,73 +214,163 @@ class LiveLinkList extends StatelessWidget {
             horizontal: Sizes.p8,
             vertical: Sizes.p4,
           ),
-          child: LiveLinkItem(link: link),
+          child: SocoLiveLinkItem(link: link),
         );
       },
     );
   }
 }
 
-class LiveLinkItem extends StatefulWidget {
-  const LiveLinkItem({
+class SocoLiveLinkItem extends StatelessWidget {
+  const SocoLiveLinkItem({
     super.key,
     required this.link,
   });
 
-  final LiveLink link;
-
-  @override
-  State<LiveLinkItem> createState() => _LiveLinkItemState();
-}
-
-class _LiveLinkItemState extends State<LiveLinkItem> {
-  String _selected = '';
+  final SocoLiveServer link;
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = _selected == widget.link.url;
-    final videoType =
-        widget.link.type != null && widget.link.type!.name == 'iframe'
-            ? VideoType.iframe.name
-            : VideoType.normal.name;
-
-    final resolutionIcon =
-        switch (widget.link.resolution.trim().toLowerCase()) {
-      "fhd" => Icons.hd,
-      "hd" => Icons.hd_outlined,
-      "sd" => Icons.sd_outlined,
-      _ => Icons.link_outlined,
-    };
+    final resolutionIcon = link.name.toLowerCase().contains('hd')
+        ? Icons.hd_outlined
+        : Icons.sd_outlined;
 
     return ListTile(
       onTap: () {
-        setState(() {
-          _selected = widget.link.url;
-        });
         context.pushNamed(
           AppRoute.player.name,
           queryParameters: {
-            "videoUrl": widget.link.url,
-            "videoType": videoType,
+            "videoUrl": link.streamUrl,
+            "videoType": VideoType.normal.name,
           },
         );
       },
       leading: CircleAvatar(
-        backgroundColor:
-            isSelected ? Theme.of(context).colorScheme.secondary : null,
-        foregroundColor:
-            isSelected ? Theme.of(context).colorScheme.onSecondary : null,
         child: Icon(resolutionIcon),
       ),
-      title: Text(widget.link.name),
+      title: Text(link.name),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      selected: _selected == widget.link.url,
-      // selectedTileColor: Theme.of(context).colorScheme.primary,
-      selectedColor: Theme.of(context).colorScheme.secondary,
-      // tileColor: Theme.of(context).colorScheme.primaryFixed,
-      // textColor: Theme.of(context).colorScheme.onPrimaryFixed,
+    );
+  }
+}
+
+class SocoLiveMatchInfoWidget extends StatelessWidget {
+  const SocoLiveMatchInfoWidget({super.key, required this.match});
+
+  final SocoLiveMatch match;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Image
+        Expanded(
+          flex: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CachedNetworkImage(
+                  imageUrl: match.homeTeamLogo,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) =>
+                      const CupertinoActivityIndicator(),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.broken_image_outlined),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  match.homeTeamName,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: Sizes.p12),
+        Expanded(
+          flex: 1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (match.matchStatus.toLowerCase() != 'live')
+                Text(
+                  match.matchStatus.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              if (match.matchStatus.toLowerCase() == 'live') ...[
+                const SizedBox(height: 4),
+                AnimatedTextKit(
+                  repeatForever: true,
+                  animatedTexts: [
+                    AnimatedLiveText(
+                      "LIVE",
+                      textStyle:
+                          Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(width: Sizes.p12),
+        Expanded(
+          flex: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CachedNetworkImage(
+                  imageUrl: match.awayTeamLogo,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) =>
+                      const CupertinoActivityIndicator(),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.broken_image_outlined),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  match.awayTeamName,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

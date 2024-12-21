@@ -111,8 +111,8 @@ class LiveMatchItem extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.secondary.withOpacity(0.2),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.03),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.03),
             ],
             stops: const [0.1, 1],
           ),
@@ -120,8 +120,8 @@ class LiveMatchItem extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5),
             ],
           ),
           child: Column(
