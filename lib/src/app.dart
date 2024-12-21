@@ -46,11 +46,6 @@ class MyApp extends ConsumerWidget {
             navigatorKey: rootNavigatorKey,
             forceUpdateClient: ForceUpdateClient(
               fetchRequiredVersion: () async {
-                // * Fetch remote config from an API endpoint.
-                // * Alternatively, you can use Firebase Remote Config
-                // final client = RemoteConfigGistClient(dio: Dio());
-                // final remoteConfig = await client.fetchRemoteConfig();
-                // return remoteConfig.requiredVersion;
                 return AppRemoteConfig.latestVersion;
               },
               iosAppStoreId: '',
