@@ -16,6 +16,7 @@ import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/utils/onesignal/onesignal.dart';
 import 'package:vs_live/src/utils/remote_config/remote_config.dart';
+import 'package:vs_live/src/utils/scheduler.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 import 'package:wiredash/wiredash.dart';
 
@@ -60,6 +61,27 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
         loadNativeAd();
       }
     }
+
+    AppScheduler.taskDaily('vpn_notice', () {
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        MaterialBanner(
+          forceActionsBelow: true,
+          padding: const EdgeInsets.all(20),
+          leading: const Icon(Icons.warning_amber_rounded),
+          content: const Text(
+            'If you are from some restricted regions like Europe and America, you must use VPN to watch some stream links.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              },
+              child: const Text('DISMISS'),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   void loadBannerAd() {
@@ -146,7 +168,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
         ),
         slivers: [
           SliverAppBar(
-            title: Text("Live Matches".hardcoded),
+            title: Text("Billion Sport Live".hardcoded),
             floating: true,
             snap: true,
             pinned: true,

@@ -70,3 +70,25 @@ Dio defaultDioClient(Ref ref) {
     ]);
   return dio;
 }
+
+@riverpod
+Dio bslDioClient(Ref ref) {
+  final baseUrl = Env.bslApiUrl;
+  final dio = Dio()
+    ..options = BaseOptions(
+      baseUrl: baseUrl,
+      headers: {
+        Headers.acceptHeader: Headers.jsonContentType,
+        Headers.contentTypeHeader: Headers.jsonContentType,
+      },
+    )
+    ..interceptors.addAll([
+      if (!kReleaseMode)
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+        ),
+    ]);
+  return dio;
+}

@@ -13,6 +13,9 @@ import 'package:vs_live/src/features/onboarding/data/onboarding_repository.dart'
 import 'package:vs_live/src/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:vs_live/src/features/settings/presentation/app_settings/settings_screen.dart';
 import 'package:vs_live/src/features/settings/presentation/privacy_policy/privacy_policy_screen.dart';
+import 'package:vs_live/src/features/soco/domain/soco_models.dart';
+import 'package:vs_live/src/features/soco/presentation/soco_live_detail/soco_live_detail_screen.dart';
+import 'package:vs_live/src/features/soco/presentation/soco_live_list/soco_live_list_screen.dart';
 import 'package:vs_live/src/routing/not_found_screen.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
@@ -25,6 +28,8 @@ part 'app_router.g.dart';
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _liveMatchesNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'live-matches');
+final _socoLivessMatchNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'soco-livess-matches');
 final _highlightsNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'highlights');
 final _settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
@@ -38,6 +43,8 @@ enum AppRoute {
   privacyPolicy,
   highlights,
   highlightPlayer,
+  socoLivess,
+  socoLivessDetails,
 }
 
 @riverpod
@@ -130,6 +137,17 @@ GoRouter goRouter(Ref ref) {
         },
       ),
       GoRoute(
+        path: '/soco-live-detail',
+        name: AppRoute.socoLivessDetails.name,
+        pageBuilder: (context, state) {
+          // todo(me): fix `type 'Null' is not a subtype of type 'LiveMatch' in type cast.`
+          SocoLiveMatch match = state.extra as SocoLiveMatch;
+          return NoTransitionPage(
+            child: SocoLiveDetailScreen(match: match),
+          );
+        },
+      ),
+      GoRoute(
         path: '/privacy-policy',
         name: AppRoute.privacyPolicy.name,
         pageBuilder: (context, state) => const NoTransitionPage(
@@ -149,6 +167,18 @@ GoRouter goRouter(Ref ref) {
                 name: AppRoute.home.name,
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: LiveMatchScreen(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _socoLivessMatchNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/soco-livess',
+                name: AppRoute.socoLivess.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: SocoLiveListScreen(),
                 ),
               ),
             ],
