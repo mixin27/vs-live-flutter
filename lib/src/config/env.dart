@@ -10,7 +10,12 @@ abstract class Env {
   @EnviedField(varName: 'BSL_API_URL', obfuscate: true)
   static final String bslApiUrl = _Env.bslApiUrl;
 
-  @EnviedField(varName: 'API_KEY', obfuscate: true)
+  @EnviedField(
+    varName: 'API_KEY',
+    obfuscate: true,
+    rawString: true,
+    interpolate: false,
+  )
   static final String apiKey = _Env.apiKey;
 
   @EnviedField(varName: 'ONESIGNAL_APP_ID', obfuscate: true)
