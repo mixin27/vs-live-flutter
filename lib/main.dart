@@ -29,7 +29,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await AppRemoteConfig.initConfig();
+  unawaited(AppRemoteConfig.initConfig());
   unawaited(AdHelper.initAds());
 
   // turn off the # in the URLs on the web

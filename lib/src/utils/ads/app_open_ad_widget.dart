@@ -22,13 +22,12 @@ class _AppOpenAdWidgetState extends State<AppOpenAdWidget> {
   void initState() {
     super.initState();
 
-    AdHelper.showConsentUMP();
-
     if (AppRemoteConfig.hideAds) return;
 
-    _appOpenAdManager.loadAd(onAdLoaded: () {
-      _appOpenAdManager.showAdIfAvailable();
-    });
+    AdHelper.showConsentUMP();
+    // _appOpenAdManager.loadAd(onAdLoaded: () {
+    //   _appOpenAdManager.showAdIfAvailable();
+    // });
 
     if (!AppRemoteConfig.hideAppOpenAdListener) {
       _appLifecycleReactor = AppLifecycleReactor(

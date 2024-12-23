@@ -2,11 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:vs_live/src/utils/ads/ad_helper.dart';
 
 import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 
 class AppOpenAdManager {
-  String adUnitId = AppRemoteConfig.appOpenAd;
+  String adUnitId = AdHelper.appOpenAdUnitId;
 
   AppOpenAd? _appOpenAd;
   bool _isShowingAd = false;

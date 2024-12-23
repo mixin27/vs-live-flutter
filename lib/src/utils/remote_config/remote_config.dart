@@ -3,10 +3,7 @@ import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:vs_live/src/config/env.dart';
-
-const _isDebug = kDebugMode || kProfileMode;
 
 class AppRemoteConfig {
   static final _config = FirebaseRemoteConfig.instance;
@@ -18,12 +15,7 @@ class AppRemoteConfig {
         "{     \"native\": true,     \"banner\": true,     \"interstitial\": true,     \"rewarded\": true }",
     "highlight_list_page":
         "{     \"native\": true,     \"banner\": true,     \"interstitial\": true,     \"rewarded\": true }",
-    "banner_ad": "ca-app-pub-7567997114394639/8648546201",
-    "interstitial_ad": "ca-app-pub-7567997114394639/1475405831",
-    "native_ad": "ca-app-pub-7567997114394639/9425876604",
-    "rewarded_ad": "ca-app-pub-7567997114394639/8288226195",
     "show_ads": true,
-    "app_open_ad": "ca-app-pub-7567997114394639/7748304172",
     "show_app_open_ad": true,
     "show_banner_ad": true,
     "show_native_ad": true,
@@ -122,27 +114,6 @@ class AppRemoteConfig {
 
   static bool get _showRewardedAd => _config.getBool("show_rewarded_ad");
   static bool get hideRewardedAd => !_showRewardedAd;
-
-  // ad ids
-  static String get _nativeAd => _config.getString('native_ad');
-  static String get nativeAd =>
-      _isDebug ? "ca-app-pub-3940256099942544/2247696110" : _nativeAd;
-
-  static String get _bannerAd => _config.getString('banner_ad');
-  static String get bannerAd =>
-      _isDebug ? "ca-app-pub-3940256099942544/9214589741" : _bannerAd;
-
-  static String get _interstitialAd => _config.getString('interstitial_ad');
-  static String get interstitialAd =>
-      _isDebug ? "ca-app-pub-3940256099942544/1033173712" : _interstitialAd;
-
-  static String get _rewardedAd => _config.getString('rewarded_ad');
-  static String get rewardedAd =>
-      _isDebug ? "ca-app-pub-3940256099942544/5224354917" : _rewardedAd;
-
-  static String get _appOpenAd => _config.getString('app_open_ad');
-  static String get appOpenAd =>
-      _isDebug ? "ca-app-pub-3940256099942544/9257395921" : _appOpenAd;
 
   // app update
   static String get latestVersion => _config.getString('latest_version');

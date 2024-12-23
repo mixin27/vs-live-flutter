@@ -1,8 +1,10 @@
 // ignore_for_file: unused_field
 
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:vs_live/src/utils/dialogs.dart';
@@ -12,6 +14,56 @@ class AdHelper {
   // for initializing ads sdk
   static Future initAds() async {
     return MobileAds.instance.initialize();
+  }
+
+  static String get bannerAdUnitId {
+    if (Platform.isAndroid) {
+      return !kReleaseMode
+          ? 'ca-app-pub-3940256099942544/9214589741'
+          : 'ca-app-pub-7567997114394639/8648546201';
+    } else {
+      throw UnsupportedError("Unsupported platform");
+    }
+  }
+
+  static String get nativeAdUnitId {
+    if (Platform.isAndroid) {
+      return !kReleaseMode
+          ? 'ca-app-pub-3940256099942544/2247696110'
+          : 'ca-app-pub-7567997114394639/9425876604';
+    } else {
+      throw UnsupportedError("Unsupported platform");
+    }
+  }
+
+  static String get interstitialAdUnitId {
+    if (Platform.isAndroid) {
+      return !kReleaseMode
+          ? 'ca-app-pub-3940256099942544/1033173712'
+          : 'ca-app-pub-7567997114394639/1475405831';
+    } else {
+      throw UnsupportedError("Unsupported platform");
+    }
+  }
+
+  static String get appOpenAdUnitId {
+    if (Platform.isAndroid) {
+      return !kReleaseMode
+          ? 'ca-app-pub-3940256099942544/9257395921'
+          : 'ca-app-pub-7567997114394639/7748304172';
+    } else {
+      throw UnsupportedError("Unsupported platform");
+    }
+  }
+
+  static String get rewardedAdUnitId {
+    if (Platform.isAndroid) {
+      return !kReleaseMode
+          ? 'ca-app-pub-3940256099942544/5224354917'
+          : 'ca-app-pub-7567997114394639/8288226195';
+    } else {
+      throw UnsupportedError("Unsupported platform");
+    }
   }
 
   static InterstitialAd? _interstitialAd;
@@ -25,12 +77,10 @@ class AdHelper {
 
   //*****************Interstitial Ad******************
   static void precacheInterstitialAd() {
-    log('Precache Interstitial Ad - Id: ${AppRemoteConfig.interstitialAd}');
-
     if (AppRemoteConfig.hideAds) return;
 
     InterstitialAd.load(
-      adUnitId: AppRemoteConfig.interstitialAd,
+      adUnitId: interstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -75,7 +125,7 @@ class AdHelper {
     showLoadingDialog(context);
 
     InterstitialAd.load(
-      adUnitId: AppRemoteConfig.interstitialAd,
+      adUnitId: interstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -103,7 +153,7 @@ class AdHelper {
     if (AppRemoteConfig.hideAds || AppRemoteConfig.hideNativeAd) return;
 
     _nativeAd = NativeAd(
-      adUnitId: AppRemoteConfig.nativeAd,
+      adUnitId: nativeAdUnitId,
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           log('$NativeAd loaded.');
@@ -139,7 +189,7 @@ class AdHelper {
     // }
 
     return NativeAd(
-      adUnitId: AppRemoteConfig.nativeAd,
+      adUnitId: nativeAdUnitId,
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           log('$NativeAd loaded.');
@@ -166,7 +216,7 @@ class AdHelper {
 
     _bannerAd = BannerAd(
       size: AdSize.banner,
-      adUnitId: AppRemoteConfig.bannerAd,
+      adUnitId: bannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           log('$NativeAd loaded.');
@@ -197,7 +247,7 @@ class AdHelper {
 
     return BannerAd(
       size: AdSize.banner,
-      adUnitId: AppRemoteConfig.bannerAd,
+      adUnitId: bannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           log('$BannerAd loaded.');
@@ -227,7 +277,7 @@ class AdHelper {
     showLoadingDialog(context);
 
     RewardedAd.load(
-      adUnitId: AppRemoteConfig.rewardedAd,
+      adUnitId: rewardedAdUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
