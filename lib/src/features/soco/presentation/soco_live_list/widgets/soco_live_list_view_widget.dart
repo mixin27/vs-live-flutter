@@ -101,6 +101,7 @@ class SocoLiveListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverList.builder(
+      itemCount: matches.length,
       itemBuilder: (context, index) {
         final match = matches[index];
         return SocoLiveListItem(match: match);
