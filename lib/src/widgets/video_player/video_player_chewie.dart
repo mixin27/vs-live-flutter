@@ -33,16 +33,17 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
   }
 
   Future<void> initializePlayer() async {
-    _videoPlayerController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-          ..addListener(() {
-            if (_videoPlayerController.value.hasError) {
-              setState(() {
-                errorMessage = _videoPlayerController.value.errorDescription ??
-                    "Unknown error occurred";
-              });
-            }
+    _videoPlayerController = VideoPlayerController.networkUrl(
+      Uri.parse(widget.videoUrl),
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    )..addListener(() {
+        if (_videoPlayerController.value.hasError) {
+          setState(() {
+            errorMessage = _videoPlayerController.value.errorDescription ??
+                "Unknown error occurred";
           });
+        }
+      });
 
     await Future.wait([
       _videoPlayerController.initialize(),
