@@ -14,23 +14,13 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // PackageInfo? _packageInfo;
-
   @override
   void initState() {
     // Record a visit to this page.
     AnalyticsUtil.logScreenView(screenName: 'SettingsScreen');
 
     super.initState();
-    // _loadPackageInfo();
   }
-
-  // Future<void> _loadPackageInfo() async {
-  //   final packageInfo = await PackageInfo.fromPlatform();
-  //   setState(() {
-  //     _packageInfo = packageInfo;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,19 +40,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.feedback_outlined),
             title: Text("Feedback".hardcoded),
           ),
-          // AboutListTile(
-          //   icon: const Icon(Icons.info_outline),
-          //   applicationName: "Billion Sport Live",
-          //   applicationVersion:
-          //       _packageInfo == null ? "" : 'v${_packageInfo?.version}',
-          //   applicationIcon: Image.asset(
-          //     "assets/images/logo_gradient.png",
-          //     width: 30,
-          //     height: 30,
-          //   ),
-          //   applicationLegalese: 'Copyright (c) 2024 Billion Sport Live',
-          //   child: Text("License".hardcoded),
-          // ),
         ],
       ),
     );

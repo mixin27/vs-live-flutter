@@ -279,9 +279,7 @@ class _LiveLinkItemState extends State<LiveLinkItem> {
   Widget build(BuildContext context) {
     final isSelected = _selected == widget.link.url;
     final videoType =
-        widget.link.type != null && widget.link.type!.name == 'iframe'
-            ? VideoType.iframe.name
-            : VideoType.normal.name;
+        widget.link.type?.name.getVideoType().name ?? VideoType.normal.name;
 
     final resolutionIcon =
         switch (widget.link.resolution.trim().toLowerCase()) {
