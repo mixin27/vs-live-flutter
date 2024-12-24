@@ -1,7 +1,7 @@
 name: vs_live
 description: "Billion sport live application."
 publish_to: "none"
-version: 1.1.5+17
+version: 1.1.7+19
 
 environment:
   sdk: ^3.5.3
@@ -27,8 +27,10 @@ dependencies:
   video_player: ^2.9.2
   chewie: ^1.8.5
 
+  # webview_flutter: ^4.10.0
   webview_flutter: ^4.9.0
   webview_flutter_wkwebview: ^3.16.3
+  # youtube_player_iframe: ^5.2.1
   youtube_player_iframe: ^5.2.0
 
   cached_network_image: ^3.4.1
@@ -47,13 +49,6 @@ dependencies:
   package_info_plus: ^8.1.2
   pub_semver: ^2.1.5
   wiredash: ^2.3.0
-
-# dependency_overrides:
-#   webview_flutter: ^4.10.0
-#   google_mobile_ads:
-#     git:
-#       url: https://github.com/googleads/googleads-mobile-flutter.git
-#       path: tree/main/packages/google_mobile_ads
 
 dev_dependencies:
   flutter_test:

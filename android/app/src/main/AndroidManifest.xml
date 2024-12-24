@@ -103,9 +103,9 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <meta-data
+        <!-- <meta-data
             android:name="com.onesignal.NotificationServiceExtension"
-            android:value="com.billion.sport_live.NotificationServiceExtension" />
+            android:value="com.billion.sport_live.NotificationServiceExtension" /> -->
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
