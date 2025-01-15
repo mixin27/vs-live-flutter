@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
+import 'package:vs_live/src/widgets/settings/force_mobile_layout_list_tile.dart';
 import 'package:vs_live/src/widgets/settings/notification_list_tile.dart';
 import 'package:vs_live/src/widgets/settings/privacy_policy_list_tile.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_tile.dart';
@@ -31,6 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           const NotificationSwitchListTile(),
+          const ForceMobileLayoutListTile(),
           const ThemeModeSwitchTile(),
           const PrivacyPolicyListTile(),
           ListTile(
