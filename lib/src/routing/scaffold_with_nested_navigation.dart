@@ -1,12 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vs_live/src/providers/force_mobile_layout_setting_provider.dart';
 
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 
 // Stateful navigation based on:
 // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
-class ScaffoldWithNestedNavigation extends StatelessWidget {
+class ScaffoldWithNestedNavigation extends ConsumerWidget {
   const ScaffoldWithNestedNavigation({
     Key? key,
     required this.navigationShell,
@@ -25,9 +27,11 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isForceMobileLayout = ref.watch(forceMobileLayoutSettingProvider);
     final size = MediaQuery.sizeOf(context);
-    if (size.width < 450) {
+
+    if (isForceMobileLayout || size.width < 450) {
       return ScaffoldWithNavigationBar(
         body: navigationShell,
         currentIndex: navigationShell.currentIndex,
