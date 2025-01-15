@@ -47,7 +47,7 @@ Use ADB to simulate the custom schema:
 adb shell am start -a android.intent.action.VIEW -d "bsl://open.bsl.app" com.billion.sport_live
 ```
 
-Test `bls://kyawzayartun.com:`
+Test `bsl://kyawzayartun.com:`
 
 Use ADB for the HTTPS link:
 

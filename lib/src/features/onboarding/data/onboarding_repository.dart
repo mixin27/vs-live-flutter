@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vs_live/src/providers/shared_preferences_provider.dart';
 
 part 'onboarding_repository.g.dart';
 
@@ -21,5 +22,6 @@ class OnboardingRepository {
 
 @Riverpod(keepAlive: true)
 Future<OnboardingRepository> onboardingRepository(Ref ref) async {
-  return OnboardingRepository(await SharedPreferences.getInstance());
+  final sharedPreferences = await ref.watch(sharedPreferencesProvider.future);
+  return OnboardingRepository(sharedPreferences);
 }
