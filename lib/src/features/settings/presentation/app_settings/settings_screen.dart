@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 import 'package:vs_live/src/widgets/settings/force_mobile_layout_list_tile.dart';
@@ -41,6 +42,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
             leading: const Icon(Icons.feedback_outlined),
             title: Text("Feedback".hardcoded),
+          ),
+          ListTile(
+            onTap: () async {
+              final url = Uri.parse(
+                'https://github.com/mixin27/vs-live-flutter/issues',
+              );
+              if (!await launchUrl(url)) {
+                throw Exception('Could not launch $url');
+              }
+            },
+            leading: const Icon(Icons.code_outlined),
+            title: Text("Open issue".hardcoded),
+          ),
+          ListTile(
+            onTap: () async {
+              final url = Uri.parse(
+                'https://github.com/mixin27/vs-live-flutter',
+              );
+              if (!await launchUrl(url)) {
+                throw Exception('Could not launch $url');
+              }
+            },
+            leading: Image.asset(
+              'assets/github.png',
+              width: 30,
+              height: 30,
+              fit: BoxFit.contain,
+            ),
+            title: Text("Github".hardcoded),
           ),
         ],
       ),

@@ -1,7 +1,7 @@
 name: vs_live
 description: "Billion sport live application."
 publish_to: "none"
-version: 1.1.9+21
+version: 1.2.0+22
 
 environment:
   sdk: ^3.5.3
@@ -50,6 +50,8 @@ dependencies:
   pub_semver: ^2.1.5
   wiredash: ^2.3.0
 
+  device_preview: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,6 +70,7 @@ flutter:
   assets:
     - assets/player.html
     - assets/images/
+    - assets/github.png
 
   # fonts:
   #   - family: Schyler

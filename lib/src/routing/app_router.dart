@@ -19,7 +19,6 @@ import 'package:vs_live/src/features/soco/presentation/soco_live_list/soco_live_
 import 'package:vs_live/src/routing/not_found_screen.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
-import 'app_startup.dart';
 import 'scaffold_with_nested_navigation.dart';
 
 part 'app_router.g.dart';
@@ -49,19 +48,11 @@ enum AppRoute {
 
 @riverpod
 GoRouter goRouter(Ref ref) {
-  // rebuild GoRouter when app startup state changes
-  final appStartupState = ref.watch(appStartupProvider);
-
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/home',
     debugLogDiagnostics: !kReleaseMode,
     redirect: (context, state) {
-      // If the app is still initializing, show the /startup route
-      if (appStartupState.isLoading || appStartupState.hasError) {
-        return '/startup';
-      }
-
       final onboardingRepository =
           ref.read(onboardingRepositoryProvider).requireValue;
       final didCompleteOnboarding = onboardingRepository.isOnboardingComplete();
@@ -75,23 +66,13 @@ GoRouter goRouter(Ref ref) {
         return null;
       }
 
-      if (path.startsWith('/startup') || path.startsWith('/onboarding')) {
+      if (path.startsWith('/onboarding')) {
         return '/home';
       }
 
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/startup',
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: AppStartupWidget(
-            // * This is just a placeholder
-            // * The loaded route will be managed by GoRouter on state change
-            onLoaded: (_) => const SizedBox.shrink(),
-          ),
-        ),
-      ),
       GoRoute(
         path: '/onboarding',
         name: AppRoute.onboarding.name,
