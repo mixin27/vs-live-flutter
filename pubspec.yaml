@@ -1,7 +1,7 @@
 name: vs_live
 description: "Billion sport live application."
 publish_to: "none"
-version: 1.2.0+22
+version: 1.2.1+23
 
 environment:
   sdk: ^3.5.3
@@ -18,35 +18,35 @@ dependencies:
   url_launcher: ^6.3.1
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0
-  go_router: ^14.6.2
+  go_router: ^14.6.3
   json_annotation: ^4.9.0
-  shared_preferences: ^2.3.4
+  shared_preferences: ^2.3.5
   envied: ^0.5.4+1
 
   # video player
   video_player: ^2.9.2
-  chewie: ^1.8.5
+  chewie: ^1.10.0
 
   # webview_flutter: ^4.10.0
   webview_flutter: ^4.9.0
-  webview_flutter_wkwebview: ^3.16.3
+  webview_flutter_wkwebview: ^3.17.0
   # youtube_player_iframe: ^5.2.1
   youtube_player_iframe: ^5.2.0
 
   cached_network_image: ^3.4.1
-  flutter_markdown: ^0.7.4+3
+  flutter_markdown: ^0.7.5
   onesignal_flutter: ^5.2.9
   native_id: ^0.0.5
 
   google_mobile_ads: ^5.2.0
-  firebase_core: ^3.9.0
-  firebase_remote_config: ^5.2.0
-  firebase_analytics: ^11.3.6
-  firebase_crashlytics: ^4.2.0
+  firebase_core: ^3.10.0
+  firebase_remote_config: ^5.3.0
+  firebase_analytics: ^11.4.0
+  firebase_crashlytics: ^4.3.0
 
   app_links: ^6.3.3
   flutter_staggered_grid_view: ^0.7.0
-  package_info_plus: ^8.1.2
+  package_info_plus: ^8.1.3
   pub_semver: ^2.1.5
   wiredash: ^2.3.0
 
