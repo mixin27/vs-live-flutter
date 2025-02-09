@@ -57,6 +57,7 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
       videoPlayerController: _videoPlayerController,
       aspectRatio: _videoPlayerController.value.aspectRatio,
       autoPlay: true,
+      allowedScreenSleep: false,
       showOptions: !widget.isLive,
       controlsSafeAreaMinimum: const EdgeInsets.all(2),
       fullScreenByDefault: true,
