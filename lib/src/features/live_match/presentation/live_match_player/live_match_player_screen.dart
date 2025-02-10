@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/widgets/video_player/adaptive_video_player.dart';
 
@@ -27,6 +28,8 @@ class _LiveMatchPlayerScreenState extends State<LiveMatchPlayerScreen> {
 
     super.initState();
 
+    WakelockPlus.enable();
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
@@ -48,6 +51,7 @@ class _LiveMatchPlayerScreenState extends State<LiveMatchPlayerScreen> {
 
   @override
   void dispose() {
+    WakelockPlus.disable();
     _resetOrientation();
     super.dispose();
   }
