@@ -8,7 +8,7 @@
 PRODUCT_NAME = vs_live
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.billionare.vsLive
+PRODUCT_BUNDLE_IDENTIFIER = com.billionare.sportLive
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 com.billionare. All rights reserved.

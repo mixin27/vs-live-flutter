@@ -30,11 +30,12 @@ class _LiveMatchPlayerScreenState extends State<LiveMatchPlayerScreen> {
 
     WakelockPlus.enable();
 
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    // Force landscape mode
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+
+    // Hide status and navigation bars for a true full-screen experience
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
@@ -57,7 +58,11 @@ class _LiveMatchPlayerScreenState extends State<LiveMatchPlayerScreen> {
   }
 
   void _resetOrientation() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    // Restore portrait mode when exiting the match screen
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+    // Restore system UI settings
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 }
