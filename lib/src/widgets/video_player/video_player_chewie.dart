@@ -37,17 +37,16 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
       Uri.parse(widget.videoUrl),
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
     )..addListener(() {
-        if (_videoPlayerController.value.hasError) {
-          setState(() {
-            errorMessage = _videoPlayerController.value.errorDescription ??
-                "Unknown error occurred";
-          });
-        }
-      });
+      if (_videoPlayerController.value.hasError) {
+        setState(() {
+          errorMessage =
+              _videoPlayerController.value.errorDescription ??
+              "Unknown error occurred";
+        });
+      }
+    });
 
-    await Future.wait([
-      _videoPlayerController.initialize(),
-    ]);
+    await Future.wait([_videoPlayerController.initialize()]);
     _createChewieController();
     setState(() {});
   }
@@ -55,7 +54,8 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
   void _createChewieController() {
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      aspectRatio: _videoPlayerController.value.aspectRatio,
+      aspectRatio:
+          MediaQuery.sizeOf(context).width / MediaQuery.sizeOf(context).height,
       autoPlay: true,
       showOptions: !widget.isLive,
       controlsSafeAreaMinimum: const EdgeInsets.all(2),
@@ -69,15 +69,15 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
         backgroundColor: Color.fromRGBO(41, 41, 41, 0.7),
         iconColor: Color.fromARGB(255, 200, 200, 200),
       ),
-      errorBuilder: (context, errorMessage) => Center(
-        child: Text(
-          errorMessage,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.error),
-        ),
-      ),
+      errorBuilder:
+          (context, errorMessage) => Center(
+            child: Text(
+              errorMessage,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+          ),
     );
   }
 
@@ -96,10 +96,9 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
                 child: Text(
                   "An error occurred.",
                   textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.redAccent),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: Colors.redAccent),
                 ),
               ),
               TextButton(
@@ -118,30 +117,28 @@ class _MyChewieVideoPlayerState extends State<VideoPlayerChewie> {
     }
 
     return SafeArea(
-      child: _chewieController != null &&
-              _chewieController!.videoPlayerController.value.isInitialized
-          ? Chewie(
-              controller: _chewieController!,
-            )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const CupertinoActivityIndicator(
-                  radius: 25,
-                  color: Colors.white54,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Loading...',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.white54),
-                ),
-              ],
-            ),
+      child:
+          _chewieController != null &&
+                  _chewieController!.videoPlayerController.value.isInitialized
+              ? Chewie(controller: _chewieController!)
+              : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const CupertinoActivityIndicator(
+                    radius: 25,
+                    color: Colors.white54,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Loading...',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: Colors.white54),
+                  ),
+                ],
+              ),
     );
   }
 
@@ -190,14 +187,15 @@ class _DelaySliderState extends State<DelaySlider> {
       ),
       trailing: IconButton(
         icon: const Icon(Icons.save),
-        onPressed: saved
-            ? null
-            : () {
-                widget.onSave(delay);
-                setState(() {
-                  saved = true;
-                });
-              },
+        onPressed:
+            saved
+                ? null
+                : () {
+                  widget.onSave(delay);
+                  setState(() {
+                    saved = true;
+                  });
+                },
       ),
     );
   }

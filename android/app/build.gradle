@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     // START: FlutterFire Configuration
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
     // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -17,15 +18,16 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.billion.sport_live"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
+    // ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_11
     }
 
     defaultConfig {
@@ -64,10 +66,9 @@ android {
     }
 }
 
-dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    // implementation 'com.onesignal:OneSignal:[5.0.0, 5.99.99]'
-}
+// dependencies {
+//     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+// }
 
 flutter {
     source = "../.."

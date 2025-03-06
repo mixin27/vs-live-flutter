@@ -49,41 +49,42 @@ class MyApp extends ConsumerWidget {
           return DevicePreview.appBuilder(
             context,
             AppStartupWidget(
-              onLoaded: (_) => ForceUpdateWidget(
-                navigatorKey: rootNavigatorKey,
-                forceUpdateClient: ForceUpdateClient(
-                  fetchRequiredVersion: () async {
-                    return AppRemoteConfig.latestVersion;
-                  },
-                  iosAppStoreId: '',
-                ),
-                allowCancel: !AppRemoteConfig.forceUpdate,
-                showForceUpdateAlert: (context, allowCancel) {
-                  log("show update dialog");
-                  return showAlertDialog(
-                    context: context,
-                    title: AppRemoteConfig.updateTitle,
-                    content: AppRemoteConfig.updateDescription,
-                    cancelActionText: allowCancel ? 'Later' : null,
-                    defaultActionText: 'Update Now',
-                  );
-                },
-                showStoreListing: (storeUrl) async {
-                  if (await canLaunchUrl(storeUrl)) {
-                    await launchUrl(
-                      storeUrl,
-                      // * Open app store app directly (or fallback to browser)
-                      mode: LaunchMode.externalApplication,
-                    );
-                  } else {
-                    log('Cannot launch URL: $storeUrl');
-                  }
-                },
-                onException: (e, st) {
-                  log(e.toString());
-                },
-                child: AppOpenAdWidget(child: child!),
-              ),
+              onLoaded:
+                  (_) => ForceUpdateWidget(
+                    navigatorKey: rootNavigatorKey,
+                    forceUpdateClient: ForceUpdateClient(
+                      fetchRequiredVersion: () async {
+                        return AppRemoteConfig.latestVersion;
+                      },
+                      iosAppStoreId: '',
+                    ),
+                    allowCancel: !AppRemoteConfig.forceUpdate,
+                    showForceUpdateAlert: (context, allowCancel) {
+                      log("show update dialog");
+                      return showAlertDialog(
+                        context: context,
+                        title: AppRemoteConfig.updateTitle,
+                        content: AppRemoteConfig.updateDescription,
+                        cancelActionText: allowCancel ? 'Later' : null,
+                        defaultActionText: 'Update Now',
+                      );
+                    },
+                    showStoreListing: (storeUrl) async {
+                      if (await canLaunchUrl(storeUrl)) {
+                        await launchUrl(
+                          storeUrl,
+                          // * Open app store app directly (or fallback to browser)
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } else {
+                        log('Cannot launch URL: $storeUrl');
+                      }
+                    },
+                    onException: (e, st) {
+                      log(e.toString());
+                    },
+                    child: AppOpenAdWidget(child: child!),
+                  ),
             ),
           );
         },

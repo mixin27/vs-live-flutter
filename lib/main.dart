@@ -26,9 +26,7 @@ Future<void> main() async {
 
   sharedPreferences = await SharedPreferences.getInstance();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   unawaited(AppRemoteConfig.initConfig());
   unawaited(AdHelper.initAds());
@@ -36,9 +34,7 @@ Future<void> main() async {
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
 
-  final container = ProviderContainer(
-    observers: [AsyncErrorLogger()],
-  );
+  final container = ProviderContainer(observers: [AsyncErrorLogger()]);
 
   // * Register error handlers. For more info, see:
   // * https://docs.flutter.dev/testing/errors
@@ -88,9 +84,7 @@ void registerErrorHandlers(ErrorLogger errorLogger) {
         ),
         body: ListView(
           padding: const EdgeInsets.all(Sizes.p8),
-          children: [
-            Text(details.toString()),
-          ],
+          children: [Text(details.toString())],
         ),
       ),
     );
