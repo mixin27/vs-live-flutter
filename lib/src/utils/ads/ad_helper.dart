@@ -130,12 +130,13 @@ class AdHelper {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           //ad listener
-          ad.fullScreenContentCallback =
-              FullScreenContentCallback(onAdDismissedFullScreenContent: (ad) {
-            onComplete();
-            _resetInterstitialAd();
-            precacheInterstitialAd();
-          });
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              onComplete();
+              _resetInterstitialAd();
+              precacheInterstitialAd();
+            },
+          );
           Navigator.pop(context);
           ad.show();
         },
@@ -178,9 +179,7 @@ class AdHelper {
     _nativeAdLoaded = false;
   }
 
-  static NativeAd? loadNativeAd({
-    VoidCallback? onLoaded,
-  }) {
+  static NativeAd? loadNativeAd({VoidCallback? onLoaded}) {
     if (AppRemoteConfig.hideAds || AppRemoteConfig.hideNativeAd) return null;
 
     // if (_nativeAdLoaded && _nativeAd != null) {
@@ -300,7 +299,7 @@ class AdHelper {
   }
 
   // ****************** Consent ****************************
-  static showConsentUMP() {
+  static void showConsentUMP() {
     log("showConsentUMP called");
     if (AppRemoteConfig.hideAds) return;
 
@@ -323,11 +322,9 @@ class AdHelper {
       (ConsentForm consentForm) async {
         var status = await ConsentInformation.instance.getConsentStatus();
         if (status == ConsentStatus.required) {
-          consentForm.show(
-            (FormError? formError) {
-              loadForm();
-            },
-          );
+          consentForm.show((FormError? formError) {
+            loadForm();
+          });
         }
       },
       (formError) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vs_live/src/config/constants/app_strings.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
@@ -22,15 +22,12 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Privacy Policy'),
-      ),
-      body: Markdown(
-        data: AppStrings.privacyPolicyMarkdown,
-        onTapLink: (text, href, title) async {
-          if (href == null) return;
-          final url = Uri.parse(href);
-          if (!await launchUrl(url)) {
+      appBar: AppBar(title: const Text('Privacy Policy')),
+      body: GptMarkdown(
+        AppStrings.privacyPolicyMarkdown,
+        onLinkTap: (url, title) async {
+          final uri = Uri.parse(url);
+          if (!await launchUrl(uri)) {
             throw Exception('Could not launch $url');
           }
         },

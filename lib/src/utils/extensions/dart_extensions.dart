@@ -11,9 +11,10 @@ extension SafeList<T> on List<T>? {
 }
 
 extension StringX on String {
-  String get initialCharacters => trim().isNotEmpty
-      ? trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
-      : '';
+  String get initialCharacters =>
+      trim().isNotEmpty
+          ? trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
+          : '';
 
   String smallSentence() {
     if (length > 30) {
@@ -39,8 +40,9 @@ extension StringX on String {
   }
 
   List<String> getExtractedUrls() {
-    final RegExp exp =
-        RegExp(r'(?:(?:https?):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+    final RegExp exp = RegExp(
+      r'(?:(?:https?):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+',
+    );
     List<RegExpMatch> matches = exp.allMatches(this).toList();
     List<String> items = List.empty();
 
@@ -144,7 +146,7 @@ extension DateTimeNullX on DateTime? {
   }
 
   /// Check if [DateTime] is equal to a certain [age]
-  isAgeEqualTo(int age) {
+  bool? isAgeEqualTo(int age) {
     if (this == null) return null;
     int? ageCheck = toAge();
     if (ageCheck == null) return null;

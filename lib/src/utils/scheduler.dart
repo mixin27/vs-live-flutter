@@ -25,7 +25,7 @@ class AppScheduler {
     return await writeValue(name, (value == true ? "true" : "false"));
   }
 
-  static taskOnce(String name, Function() callback) async {
+  static Future taskOnce(String name, Function() callback) async {
     String key = "${name}_once";
     bool alreadyExecuted = await readBool(key);
     if (!alreadyExecuted) {
@@ -34,7 +34,11 @@ class AppScheduler {
     }
   }
 
-  static taskDaily(String name, Function() callback, {DateTime? endAt}) async {
+  static Future taskDaily(
+    String name,
+    Function() callback, {
+    DateTime? endAt,
+  }) async {
     if (endAt != null && !endAt.isInFuture()) {
       return;
     }
@@ -58,15 +62,21 @@ class AppScheduler {
     }
   }
 
-  static _executeTaskAndSetDateTime(String key, Function() callback) async {
+  static Future _executeTaskAndSetDateTime(
+    String key,
+    Function() callback,
+  ) async {
     DateTime dateTime = DateTime.now();
     await writeValue(key, dateTime.toString());
 
     await callback();
   }
 
-  static taskOnceAfterDate(String name, Function() callback,
-      {required DateTime date}) async {
+  static Future taskOnceAfterDate(
+    String name,
+    Function() callback, {
+    required DateTime date,
+  }) async {
     /// Check if the date is in the past
     if (!date.isInPast()) {
       return;
