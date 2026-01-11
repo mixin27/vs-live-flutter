@@ -10,10 +10,12 @@ class ForceUpdateClient {
   const ForceUpdateClient({
     required this.fetchRequiredVersion,
     required this.iosAppStoreId,
+    this.customDownloadLink,
   });
 
   final Future<String> Function() fetchRequiredVersion;
   final String iosAppStoreId;
+  final String? customDownloadLink;
 
   static const _name = 'Force Update';
 
@@ -37,9 +39,10 @@ class ForceUpdateClient {
     // * But semver can only parse this if it's formatted as `X.Y.Z-flavor`
     // * and we only care about X.Y.Z, so we can remove the flavor
     const flavorStr = appFlavor ?? '';
-    final currentVersionStr = flavorStr.isEmpty
-        ? packageInfo.version
-        : packageInfo.version.replaceAll('.$flavorStr', '');
+    final currentVersionStr =
+        flavorStr.isEmpty
+            ? packageInfo.version
+            : packageInfo.version.replaceAll('.$flavorStr', '');
 
     // * Parse versions in semver format
     final requiredVersion = Version.parse(requiredVersionStr);
@@ -47,9 +50,10 @@ class ForceUpdateClient {
 
     final updateRequired = currentVersion < requiredVersion;
     log(
-        'Update ${updateRequired ? '' : 'not '}required. '
-        'Current version: $currentVersion, required version: $requiredVersion',
-        name: _name);
+      'Update ${updateRequired ? '' : 'not '}required. '
+      'Current version: $currentVersion, required version: $requiredVersion',
+      name: _name,
+    );
     return updateRequired;
   }
 
@@ -66,7 +70,8 @@ class ForceUpdateClient {
     } else if (defaultTargetPlatform == TargetPlatform.android) {
       final packageInfo = await PackageInfo.fromPlatform();
       // * On Android, use the package name from PackageInfo
-      return 'https://play.google.com/store/apps/details?id=${packageInfo.packageName}';
+      return customDownloadLink ??
+          'https://play.google.com/store/apps/details?id=${packageInfo.packageName}';
     } else {
       log(
         'No store URL for platform: ${defaultTargetPlatform.name}',

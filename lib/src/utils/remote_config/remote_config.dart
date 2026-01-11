@@ -29,6 +29,7 @@ class AppRemoteConfig {
     "force_update": true,
     "update_title": "App Update Required",
     "update_description": "Please update to continue using the app.",
+    "download_link": "https://github.com/mixin27/vs-live-flutter/releases",
     "api_url": Env.baseUrl,
     "api_key": "blablabla",
   };
@@ -118,6 +119,7 @@ class AppRemoteConfig {
   // app update
   static String get latestVersion => _config.getString('latest_version');
   static bool get forceUpdate => _config.getBool('force_update');
+  static String get customDownloadLink => _config.getString('download_link');
 }
 
 class PageAdsInfo extends Equatable {
@@ -134,11 +136,11 @@ class PageAdsInfo extends Equatable {
   final bool rewarded;
 
   factory PageAdsInfo.fromJson(Map<String, dynamic> json) => PageAdsInfo(
-        banner: json['banner'] as bool? ?? true,
-        native: json['native'] as bool? ?? true,
-        interstitial: json['interstitial'] as bool? ?? true,
-        rewarded: json['rewarded'] as bool? ?? true,
-      );
+    banner: json['banner'] as bool? ?? true,
+    native: json['native'] as bool? ?? true,
+    interstitial: json['interstitial'] as bool? ?? true,
+    rewarded: json['rewarded'] as bool? ?? true,
+  );
 
   @override
   List<Object?> get props => [banner, native, interstitial, rewarded];

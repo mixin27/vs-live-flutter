@@ -56,6 +56,7 @@ class MyApp extends ConsumerWidget {
                         return AppRemoteConfig.latestVersion;
                       },
                       iosAppStoreId: '',
+                      customDownloadLink: AppRemoteConfig.customDownloadLink,
                     ),
                     allowCancel: !AppRemoteConfig.forceUpdate,
                     showForceUpdateAlert: (context, allowCancel) {
