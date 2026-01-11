@@ -10,16 +10,10 @@ import 'package:vs_live/src/widgets/error_status_icon_widget.dart';
 import 'highlight_grid_view.dart';
 import 'highlight_list_view.dart';
 
-enum ViewType {
-  list,
-  grid,
-}
+enum ViewType { list, grid }
 
 class FootballHighlightsList extends ConsumerStatefulWidget {
-  const FootballHighlightsList({
-    super.key,
-    this.viewType = ViewType.grid,
-  });
+  const FootballHighlightsList({super.key, this.viewType = ViewType.grid});
 
   final ViewType viewType;
 
@@ -34,19 +28,16 @@ class _FootballHighlightsListState
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(
-      getAllHighlightsFeedProvider,
-      (prev, state) {
-        // state.showAlertDialogOnError(context);
+    ref.listen(getAllHighlightsFeedProvider, (prev, state) {
+      // state.showAlertDialogOnError(context);
 
-        setState(() {
-          _highlights = state.maybeWhen(
-            orElse: () => prev?.valueOrNull ?? [],
-            data: (data) => data,
-          );
-        });
-      },
-    );
+      setState(() {
+        _highlights = state.maybeWhen(
+          orElse: () => prev?.value ?? [],
+          data: (data) => data,
+        );
+      });
+    });
 
     final state = ref.watch(getAllHighlightsFeedProvider);
     final searchState = ref.watch(searchHighlightsProvider);
@@ -55,23 +46,23 @@ class _FootballHighlightsListState
       AsyncData(:final value) when value.isNotEmpty =>
         widget.viewType == ViewType.grid
             ? HighlightGridView(
-                highlights: searchState.isNotEmpty ? searchState : _highlights)
-            : HighlightListView(
-                highlights: searchState.isNotEmpty ? searchState : _highlights),
-      AsyncLoading() => _highlights.isEmpty
-          ? SliverList.list(
-              children: const [CupertinoActivityIndicator()],
+              highlights: searchState.isNotEmpty ? searchState : _highlights,
             )
-          : widget.viewType == ViewType.grid
-              ? HighlightGridView(
-                  highlights:
-                      searchState.isNotEmpty ? searchState : _highlights,
-                )
-              : HighlightListView(
-                  highlights:
-                      searchState.isNotEmpty ? searchState : _highlights,
-                ),
-      AsyncError(:final error, stackTrace: var _) => SliverList.list(children: [
+            : HighlightListView(
+              highlights: searchState.isNotEmpty ? searchState : _highlights,
+            ),
+      AsyncLoading() =>
+        _highlights.isEmpty
+            ? SliverList.list(children: const [CupertinoActivityIndicator()])
+            : widget.viewType == ViewType.grid
+            ? HighlightGridView(
+              highlights: searchState.isNotEmpty ? searchState : _highlights,
+            )
+            : HighlightListView(
+              highlights: searchState.isNotEmpty ? searchState : _highlights,
+            ),
+      AsyncError(:final error, stackTrace: var _) => SliverList.list(
+        children: [
           Padding(
             padding: const EdgeInsets.all(Sizes.p16),
             child: Column(
@@ -86,51 +77,50 @@ class _FootballHighlightsListState
                 ),
                 const SizedBox(height: Sizes.p16),
                 FilledButton(
-                  onPressed: () =>
-                      ref.refresh(getAllHighlightsFeedProvider.future),
+                  onPressed:
+                      () => ref.refresh(getAllHighlightsFeedProvider.future),
                   child: Text("Try again".hardcoded),
                 ),
               ],
             ),
           ),
-        ]),
+        ],
+      ),
       _ => SliverList.list(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(Sizes.p16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const ErrorStatusIconWidget(
-                    icon: Icons.sports_soccer_outlined,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(Sizes.p16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const ErrorStatusIconWidget(icon: Icons.sports_soccer_outlined),
+                const SizedBox(height: Sizes.p16),
+                Text(
+                  "No highlights available from the server".hardcoded,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: Sizes.p4),
+                Text(
+                  "Please come back later".hardcoded,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
-                  const SizedBox(height: Sizes.p16),
-                  Text(
-                    "No highlights available from the server".hardcoded,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: Sizes.p4),
-                  Text(
-                    "Please come back later".hardcoded,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7)),
-                  ),
-                  const SizedBox(height: Sizes.p16),
-                  FilledButton(
-                    onPressed: () =>
-                        ref.refresh(getAllHighlightsFeedProvider.future),
-                    child: Text("Refresh".hardcoded),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: Sizes.p16),
+                FilledButton(
+                  onPressed:
+                      () => ref.refresh(getAllHighlightsFeedProvider.future),
+                  child: Text("Refresh".hardcoded),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     };
   }
 }

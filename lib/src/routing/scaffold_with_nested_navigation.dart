@@ -9,10 +9,8 @@ import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
 // Stateful navigation based on:
 // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
 class ScaffoldWithNestedNavigation extends ConsumerWidget {
-  const ScaffoldWithNestedNavigation({
-    Key? key,
-    required this.navigationShell,
-  }) : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
+  const ScaffoldWithNestedNavigation({Key? key, required this.navigationShell})
+    : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
   final StatefulNavigationShell navigationShell;
 
   void _goBranch(int index) {
@@ -65,11 +63,11 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentIndex,
         destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home),
-            selectedIcon: const Icon(Icons.home_outlined),
-            label: 'Home'.hardcoded,
-          ),
+          // NavigationDestination(
+          //   icon: const Icon(Icons.home),
+          //   selectedIcon: const Icon(Icons.home_outlined),
+          //   label: 'Home'.hardcoded,
+          // ),
           NavigationDestination(
             icon: const Icon(Icons.live_tv),
             selectedIcon: const Icon(Icons.live_tv_outlined),
@@ -113,11 +111,11 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
             onDestinationSelected: onDestinationSelected,
             labelType: NavigationRailLabelType.all,
             destinations: <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: const Icon(Icons.home),
-                selectedIcon: const Icon(Icons.home_outlined),
-                label: Text('Home'.hardcoded),
-              ),
+              // NavigationRailDestination(
+              //   icon: const Icon(Icons.home),
+              //   selectedIcon: const Icon(Icons.home_outlined),
+              //   label: Text('Home'.hardcoded),
+              // ),
               NavigationRailDestination(
                 icon: const Icon(Icons.live_tv),
                 selectedIcon: const Icon(Icons.live_tv_outlined),
@@ -137,9 +135,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
           ),
           const VerticalDivider(thickness: 1, width: 1),
           // This is the main content.
-          Expanded(
-            child: body,
-          ),
+          Expanded(child: body),
         ],
       ),
     );

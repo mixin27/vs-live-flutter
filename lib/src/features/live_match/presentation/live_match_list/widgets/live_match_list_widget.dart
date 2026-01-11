@@ -40,7 +40,7 @@ class _LiveMatchListWidgetState extends ConsumerState<LiveMatchListWidget> {
 
         setState(() {
           _liveMatches = state.maybeWhen(
-            orElse: () => prev?.valueOrNull ?? [],
+            orElse: () => prev?.value ?? [],
             data: (data) => data,
           );
         });

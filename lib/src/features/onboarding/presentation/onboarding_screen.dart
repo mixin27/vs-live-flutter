@@ -45,17 +45,18 @@ class OnboardingScreen extends ConsumerWidget {
             ),
             gapH16,
             FilledButton(
-              onPressed: state.isLoading
-                  ? null
-                  : () async {
-                      await ref
-                          .read(onboardingControllerProvider.notifier)
-                          .completeOnboarding();
-                      if (context.mounted) {
-                        // go to sign in page after completing onboarding
-                        context.goNamed(AppRoute.home.name);
-                      }
-                    },
+              onPressed:
+                  state.isLoading
+                      ? null
+                      : () async {
+                        await ref
+                            .read(onboardingControllerProvider.notifier)
+                            .completeOnboarding();
+                        if (context.mounted) {
+                          // go to sign in page after completing onboarding
+                          context.goNamed(AppRoute.socoLivess.name);
+                        }
+                      },
               child: Text('Get Started'.hardcoded),
             ),
             gapH16,

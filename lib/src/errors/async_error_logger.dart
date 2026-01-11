@@ -3,15 +3,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'error_logger.dart';
 import 'exceptions.dart';
 
-class AsyncErrorLogger extends ProviderObserver {
+final class AsyncErrorLogger extends ProviderObserver {
   @override
   void didUpdateProvider(
-    ProviderBase<Object?> provider,
+    ProviderObserverContext context,
     Object? previousValue,
     Object? newValue,
-    ProviderContainer container,
   ) {
-    final errorLogger = container.read(errorLoggerProvider);
+    final errorLogger = AppErrorLogger();
     final error = _findError(newValue);
     if (error != null) {
       if (error.error is AppException) {
