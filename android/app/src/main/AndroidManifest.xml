@@ -4,9 +4,6 @@
     <!-- permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Ads Permission for Android 12 or higher -->
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
-
     <application
         android:label="${appLabel}"
         android:name="${applicationName}"
@@ -34,82 +31,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="flutter_deeplinking_enabled"
-                android:value="false" />
-
-            <!-- Deep Link -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="bsl"
-                    android:host="open.bsl.app" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="bsl"
-                    android:host="kyawzayartun.com" />
-            </intent-filter>
-
-            <!-- <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="https"
-                    android:host="play.google.com"
-                    android:pathPrefix="/store/apps/details" />
-            </intent-filter> -->
-            <!-- Deep Link -->
-
-            <!-- App Link -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:host="kyawzayartun.com" />
-                <data android:pathPrefix="/bsl" />
-            </intent-filter>
-
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:host="www.kyawzayartun.com" />
-                <data android:pathPrefix="/bsl" />
-            </intent-filter>
-            <!-- App Link -->
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
-        <!-- <meta-data
-            android:name="com.onesignal.NotificationServiceExtension"
-            android:value="com.billion.sport_live.NotificationServiceExtension" /> -->
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7567997114394639~4616995952" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

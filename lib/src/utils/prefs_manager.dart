@@ -1,4 +1,3 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vs_live/main.dart';
@@ -55,7 +54,7 @@ class PreferenceManager {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 PreferenceManager preferenceManager(Ref ref) {
   return PreferenceManager(sharedPreferences);
 }

@@ -6,11 +6,7 @@ import 'package:vs_live/src/routing/app_router.dart';
 
 /// Placeholder widget showing a message and CTA to go back to the home screen.
 class EmptyPlaceholderWidget extends ConsumerWidget {
-  const EmptyPlaceholderWidget({
-    super.key,
-    required this.message,
-    this.onTap,
-  });
+  const EmptyPlaceholderWidget({super.key, required this.message, this.onTap});
 
   final String message;
   final VoidCallback? onTap;
@@ -26,17 +22,17 @@ class EmptyPlaceholderWidget extends ConsumerWidget {
           children: [
             Text(
               message,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               textAlign: TextAlign.center,
             ),
             gapH32,
             FilledButton(
-              onPressed: onTap ??
+              onPressed:
+                  onTap ??
                   () {
-                    context.goNamed(AppRoute.home.name);
+                    context.goNamed(AppRoute.socoLivess.name);
                   },
               child: const Text('Go Home'),
             ),

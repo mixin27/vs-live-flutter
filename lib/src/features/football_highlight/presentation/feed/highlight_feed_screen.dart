@@ -1,19 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vs_live/src/config/constants/app_sizes.dart';
 import 'package:vs_live/src/features/football_highlight/domain/football_highlight.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/highlight_feed_providers.dart';
 import 'package:vs_live/src/features/football_highlight/presentation/feed/widgets/football_highlights_list.dart';
 import 'package:vs_live/src/routing/app_router.dart';
-import 'package:vs_live/src/utils/ads/ad_helper.dart';
 import 'package:vs_live/src/utils/analytics_util.dart';
 import 'package:vs_live/src/utils/localization/string_hardcoded.dart';
-import 'package:vs_live/src/utils/remote_config/remote_config.dart';
 import 'package:vs_live/src/widgets/theme/theme_mode_switch_button.dart';
 import 'package:wiredash/wiredash.dart';
 
@@ -27,60 +22,11 @@ class HighlightFeedScreen extends StatefulWidget {
 class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
   int _selectedView = 0;
 
-  BannerAd? _bannerAd;
-  bool _isBannerAdLoaded = false;
-
-  NativeAd? _nativeAd;
-  bool _isNativeAdLoaded = false;
-
   @override
   void initState() {
     // Record a visit to this page.
-    AnalyticsUtil.logScreenView(
-      screenName: 'HighlightFeedScreen',
-    );
+    AnalyticsUtil.logScreenView(screenName: 'HighlightFeedScreen');
     super.initState();
-
-    if (!AppRemoteConfig.hideAdsInHighlightList) {
-      final pageAdsInfo = AppRemoteConfig.highlightListAdsInfo;
-      if (pageAdsInfo.native) {
-        loadNativeAd();
-      }
-
-      if (pageAdsInfo.banner) {
-        loadBannerAd();
-      }
-    }
-  }
-
-  Future<void> loadBannerAd() async {
-    final ad = AdHelper.loadBannerAd(onLoaded: () {
-      log("banner ad loaded");
-      setState(() {
-        _isBannerAdLoaded = true;
-      });
-    });
-    setState(() {
-      _bannerAd = ad;
-    });
-  }
-
-  void loadNativeAd() {
-    final ad = AdHelper.loadNativeAd(onLoaded: () {
-      setState(() {
-        _isNativeAdLoaded = true;
-      });
-    });
-    setState(() {
-      _nativeAd = ad;
-    });
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    _nativeAd?.dispose();
-    super.dispose();
   }
 
   @override
@@ -89,6 +35,7 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        heroTag: 'highlight-feed-fab',
         onPressed: () {
           Wiredash.of(context).show(inheritMaterialTheme: true);
         },
@@ -117,9 +64,7 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
               automaticallyImplyLeading: false,
               title: Row(
                 children: [
-                  const Expanded(
-                    child: HighlightsSearchField(),
-                  ),
+                  const Expanded(child: HighlightsSearchField()),
                   const SizedBox(width: 10),
                   Padding(
                     padding: const EdgeInsets.only(right: Sizes.p8),
@@ -138,10 +83,7 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
                       children: [
                         Tooltip(
                           message: "Grid".hardcoded,
-                          child: const Icon(
-                            Icons.grid_view_outlined,
-                            size: 20,
-                          ),
+                          child: const Icon(Icons.grid_view_outlined, size: 20),
                         ),
                         Tooltip(
                           message: "List".hardcoded,
@@ -157,38 +99,14 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
           Consumer(
             builder: (context, ref, child) {
               return CupertinoSliverRefreshControl(
-                onRefresh: () =>
-                    ref.refresh(getAllHighlightsFeedProvider.future),
+                onRefresh:
+                    () => ref.refresh(getAllHighlightsFeedProvider.future),
               );
             },
           ),
-          SliverList.list(children: [
-            if (_bannerAd != null && _isBannerAdLoaded)
-              SizedBox(
-                width: double.infinity,
-                height: _bannerAd!.size.height.toDouble(),
-                child: AdWidget(ad: _bannerAd!),
-              ),
-            const SizedBox(height: 20),
-          ]),
           FootballHighlightsList(
             viewType: isGridView ? ViewType.grid : ViewType.list,
           ),
-          if (_nativeAd != null && _isNativeAdLoaded)
-            SliverList.list(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Sizes.p16,
-                    vertical: Sizes.p16,
-                  ),
-                  child: SizedBox(
-                    height: 400,
-                    child: AdWidget(ad: _nativeAd!),
-                  ),
-                ),
-              ],
-            ),
         ],
       ),
     );
@@ -196,9 +114,7 @@ class _HighlightFeedScreenState extends State<HighlightFeedScreen> {
 }
 
 class HighlightsSearchField extends ConsumerStatefulWidget {
-  const HighlightsSearchField({
-    super.key,
-  });
+  const HighlightsSearchField({super.key});
 
   @override
   ConsumerState<HighlightsSearchField> createState() =>
@@ -211,8 +127,10 @@ class _CustomSearchFieldState extends ConsumerState<HighlightsSearchField> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(getAllHighlightsFeedProvider);
-    final List<FootballHighlight> data =
-        state.maybeWhen(orElse: () => [], data: (data) => data);
+    final List<FootballHighlight> data = state.maybeWhen(
+      orElse: () => [],
+      data: (data) => data,
+    );
 
     return CupertinoSearchTextField(
       controller: _searchController,

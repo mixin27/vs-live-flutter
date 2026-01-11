@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/config/env.dart';
@@ -24,24 +23,25 @@ class DioClient {
 
   Dio _createDioClient() {
     final baseUrl = Env.baseUrl;
-    final dio = Dio()
-      ..options = BaseOptions(
-        baseUrl: baseUrl,
-        headers: {
-          Headers.acceptHeader: Headers.jsonContentType,
-          Headers.contentTypeHeader: Headers.jsonContentType,
-        },
-      )
-      ..interceptors.addAll([
-        if (!kReleaseMode)
-          PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
-            responseHeader: true,
-          ),
-        AuthInterceptor(),
-        AppInterceptor(),
-      ]);
+    final dio =
+        Dio()
+          ..options = BaseOptions(
+            baseUrl: baseUrl,
+            headers: {
+              Headers.acceptHeader: Headers.jsonContentType,
+              Headers.contentTypeHeader: Headers.jsonContentType,
+            },
+          )
+          ..interceptors.addAll([
+            if (!kReleaseMode)
+              PrettyDioLogger(
+                requestHeader: true,
+                requestBody: true,
+                responseHeader: true,
+              ),
+            AuthInterceptor(),
+            AppInterceptor(),
+          ]);
 
     return dio;
   }
@@ -50,45 +50,47 @@ class DioClient {
 @riverpod
 Dio defaultDioClient(Ref ref) {
   final baseUrl = Env.baseUrl;
-  final dio = Dio()
-    ..options = BaseOptions(
-      baseUrl: baseUrl,
-      headers: {
-        Headers.acceptHeader: Headers.jsonContentType,
-        Headers.contentTypeHeader: Headers.jsonContentType,
-      },
-    )
-    ..interceptors.addAll([
-      if (!kReleaseMode)
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: true,
-        ),
-      AuthInterceptor(),
-      AppInterceptor(),
-    ]);
+  final dio =
+      Dio()
+        ..options = BaseOptions(
+          baseUrl: baseUrl,
+          headers: {
+            Headers.acceptHeader: Headers.jsonContentType,
+            Headers.contentTypeHeader: Headers.jsonContentType,
+          },
+        )
+        ..interceptors.addAll([
+          if (!kReleaseMode)
+            PrettyDioLogger(
+              requestHeader: true,
+              requestBody: true,
+              responseHeader: true,
+            ),
+          AuthInterceptor(),
+          AppInterceptor(),
+        ]);
   return dio;
 }
 
 @riverpod
 Dio bslDioClient(Ref ref) {
   final baseUrl = Env.bslApiUrl;
-  final dio = Dio()
-    ..options = BaseOptions(
-      baseUrl: baseUrl,
-      headers: {
-        Headers.acceptHeader: Headers.jsonContentType,
-        Headers.contentTypeHeader: Headers.jsonContentType,
-      },
-    )
-    ..interceptors.addAll([
-      if (!kReleaseMode)
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: true,
-        ),
-    ]);
+  final dio =
+      Dio()
+        ..options = BaseOptions(
+          baseUrl: baseUrl,
+          headers: {
+            Headers.acceptHeader: Headers.jsonContentType,
+            Headers.contentTypeHeader: Headers.jsonContentType,
+          },
+        )
+        ..interceptors.addAll([
+          if (!kReleaseMode)
+            PrettyDioLogger(
+              requestHeader: true,
+              requestBody: true,
+              responseHeader: true,
+            ),
+        ]);
   return dio;
 }

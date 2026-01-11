@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/features/soco/data/services/api/bsl_api_client.dart';
 import 'package:vs_live/src/features/soco/domain/soco_models.dart';

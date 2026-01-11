@@ -1,7 +1,6 @@
 import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vs_live/src/errors/exceptions.dart';
 import 'package:vs_live/src/features/live_match/domain/live_match.dart';
@@ -11,9 +10,8 @@ import 'package:vs_live/src/utils/dio_client/dio_client.dart';
 part 'live_match_repository.g.dart';
 
 class LiveMatchRepository {
-  LiveMatchRepository({
-    Dio? dioClient,
-  }) : _client = dioClient ??= DioClient().instance;
+  LiveMatchRepository({Dio? dioClient})
+    : _client = dioClient ??= DioClient().instance;
 
   final Dio _client;
 
@@ -26,21 +24,18 @@ class LiveMatchRepository {
     try {
       final response = await _client.get(
         '/api/matches',
-        queryParameters: presentQueryParams
-            ? {
-                "page": page,
-                "limit": limit,
-              }
-            : null,
+        queryParameters:
+            presentQueryParams ? {"page": page, "limit": limit} : null,
       );
 
       final result = AppResponse<List<LiveMatch>>.fromJson(
         response.data,
-        (dynamic json) => response.data["success"] && json != null
-            ? (json as List<dynamic>)
-                .map((e) => LiveMatch.fromJson(e as Map<String, dynamic>))
-                .toList()
-            : [],
+        (dynamic json) =>
+            response.data["success"] && json != null
+                ? (json as List<dynamic>)
+                    .map((e) => LiveMatch.fromJson(e as Map<String, dynamic>))
+                    .toList()
+                : [],
       );
 
       if (result.success) {
@@ -66,9 +61,6 @@ class LiveMatchRepository {
 }
 
 @riverpod
-LiveMatchRepository liveMatchRepository(
-  Ref ref,
-  Dio? client,
-) {
+LiveMatchRepository liveMatchRepository(Ref ref, Dio? client) {
   return LiveMatchRepository(dioClient: client);
 }
